@@ -1,0 +1,240 @@
+// SahakarSeva — Full Data Model
+// All 11 tables + enums from Section 2 of the spec
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums (SQLite doesn't support native enums, so we use String with validation in app layer) ───
+
+// Role: customer, worker, coop_admin
+// KycStatus: pending, verified, rejected
+// AvailabilityStatus: online, offline
+// BookingStatus: requested, matching, assigned, in_progress, completed, cancelled, disputed
+// MatchResponse: pending, accepted, declined, expired
+// PaymentMethod: upi
+// PaymentStatus: initiated, success, failed
+// DisputeStatus: open, resolved
+// EshramStatus: not_linked, pending, linked
+// ServiceUnit: per_hour, per_job
+
+// ─── Models ───
+
+model User {
+  id             String   @id @default(uuid())
+  phone          String   @unique
+  email          String?
+  name           String
+  role           String   // customer, worker, coop_admin
+  language_pref  String   @default("en")
+  created_at     DateTime @default(now())
+
+  // Relations
+  worker_profile    WorkerProfile?
+  customer_profile  CustomerProfile?
+  bookings_as_customer Booking[]      @relation("CustomerBookings")
+  bookings_as_worker   Booking[]      @relation("WorkerBookings")
+  match_offers      MatchOffer[]
+  ratings_given     Rating[]        @relation("RatingsGiven")
+  ratings_received  Rating[]        @relation("RatingsReceived")
+  disputes_raised   Dispute[]
+  social_security   SocialSecurityLink?
+
+  @@map("users")
+}
+
+model Cooperative {
+  id                  String   @id @default(uuid())
+  name                String
+  region              String
+  registration_number String
+  fee_percentage      Float    @default(8.5) // e.g. 8.5%
+  // Match engine weight overrides (per-cooperative configurability)
+  weight_proximity    Float    @default(0.4)
+  weight_rating       Float    @default(0.3)
+  weight_fairness     Float    @default(0.3)
+  fairness_cap_hours  Float    @default(72)
+  max_radius_km       Float    @default(5.0)
+  created_at          DateTime @default(now())
+
+  // Relations
+  workers         WorkerProfile[]
+  profit_share    ProfitShareLedger[]
+
+  @@map("cooperatives")
+}
+
+model WorkerProfile {
+  user_id              String   @id
+  cooperative_id       String
+  kyc_status           String   @default("pending") // pending, verified, rejected
+  skill_categories     String   @default("[]")       // JSON array string e.g. '["plumbing","electrical"]'
+  rating_avg           Float    @default(5.0)
+  total_jobs_completed Int      @default(0)
+  wallet_balance       Float    @default(0)
+  availability_status  String   @default("offline")  // online, offline
+  current_lat          Float?
+  current_lng          Float?
+  kyc_doc_type         String?
+  kyc_doc_number       String?
+  kyc_doc_image_url    String?
+  last_job_completed_at DateTime?
+  joined_at            DateTime @default(now())
+
+  // Relations
+  user        User        @relation(fields: [user_id], references: [id])
+  cooperative Cooperative @relation(fields: [cooperative_id], references: [id])
+
+  @@map("worker_profiles")
+}
+
+model CustomerProfile {
+  user_id          String   @id
+  saved_addresses  String   @default("[]") // JSON array string of {label, lat, lng, address_text}
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("customer_profiles")
+}
+
+model ServiceCategory {
+  id         String @id @default(uuid())
+  name       String @unique
+  base_price Float
+  unit       String // per_hour, per_job
+  icon       String @default("🔧") // emoji or icon name for UI
+
+  // Relations
+  bookings Booking[]
+
+  @@map("service_categories")
+}
+
+model Booking {
+  id                String    @id @default(uuid())
+  customer_id       String
+  category_id       String
+  address_text      String
+  lat               Float
+  lng               Float
+  scheduled_time    DateTime
+  status            String    @default("requested") // requested, matching, assigned, in_progress, completed, cancelled, disputed
+  assigned_worker_id String?
+  price             Float
+  notes             String?
+  created_at        DateTime  @default(now())
+
+  // Relations
+  customer        User            @relation("CustomerBookings", fields: [customer_id], references: [id])
+  assigned_worker User?           @relation("WorkerBookings", fields: [assigned_worker_id], references: [id])
+  category        ServiceCategory @relation(fields: [category_id], references: [id])
+  match_offers    MatchOffer[]
+  payment         Payment?
+  ratings         Rating[]
+  disputes        Dispute[]
+
+  @@map("bookings")
+}
+
+model MatchOffer {
+  id              String    @id @default(uuid())
+  booking_id      String
+  worker_id       String
+  proximity_score Float     // 0-1, stored for transparency
+  rating_score    Float     // 0-1
+  fairness_score  Float     // 0-1
+  total_score     Float     // weighted sum
+  offered_at      DateTime  @default(now())
+  expires_at      DateTime
+  response        String    @default("pending") // pending, accepted, declined, expired
+  responded_at    DateTime?
+
+  // Relations
+  booking Booking @relation(fields: [booking_id], references: [id])
+  worker  User    @relation(fields: [worker_id], references: [id])
+
+  @@map("match_offers")
+}
+
+model Payment {
+  id            String   @id @default(uuid())
+  booking_id    String   @unique
+  amount        Float
+  platform_fee  Float
+  worker_payout Float
+  method        String   @default("upi")
+  upi_txn_id    String?
+  status        String   @default("initiated") // initiated, success, failed
+  created_at    DateTime @default(now())
+
+  // Relations
+  booking Booking @relation(fields: [booking_id], references: [id])
+
+  @@map("payments")
+}
+
+model Rating {
+  id           String   @id @default(uuid())
+  booking_id   String
+  from_user_id String
+  to_user_id   String
+  stars        Int      // 1-5
+  comment      String?
+  created_at   DateTime @default(now())
+
+  // Relations
+  booking  Booking @relation(fields: [booking_id], references: [id])
+  from_user User   @relation("RatingsGiven", fields: [from_user_id], references: [id])
+  to_user   User   @relation("RatingsReceived", fields: [to_user_id], references: [id])
+
+  @@map("ratings")
+}
+
+model Dispute {
+  id               String    @id @default(uuid())
+  booking_id       String
+  raised_by        String
+  reason           String
+  status           String    @default("open") // open, resolved
+  resolution_notes String?
+  created_at       DateTime  @default(now())
+
+  // Relations
+  booking  Booking @relation(fields: [booking_id], references: [id])
+  raiser   User    @relation(fields: [raised_by], references: [id])
+
+  @@map("disputes")
+}
+
+model SocialSecurityLink {
+  worker_id     String   @id
+  eshram_id     String?
+  eshram_status String   @default("not_linked") // not_linked, pending, linked
+  pacs_id       String?
+  credit_limit  Float?
+  linked_at     DateTime?
+
+  // Relations
+  worker User @relation(fields: [worker_id], references: [id])
+
+  @@map("social_security_links")
+}
+
+model ProfitShareLedger {
+  id              String    @id @default(uuid())
+  cooperative_id  String
+  period_label    String    // e.g. "2026-Q4"
+  total_surplus   Float
+  distributed_at  DateTime?
+
+  // Relations
+  cooperative Cooperative @relation(fields: [cooperative_id], references: [id])
+
+  @@map("profit_share_ledger")
+}

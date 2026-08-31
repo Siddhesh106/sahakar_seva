@@ -1,0 +1,20 @@
+{
+  "name": "sahakarseva",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SahakarSeva — Cooperative Gig Services Platform",
+  "workspaces": [
+    "backend",
+    "frontend-customer",
+    "frontend-worker",
+    "frontend-admin"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:customer": "npm run dev --workspace=frontend-customer",
+    "dev:worker": "npm run dev --workspace=frontend-worker",
+    "dev:admin": "npm run dev --workspace=frontend-admin",
+    "seed": "npm run seed --workspace=backend",
+    "db:migrate": "npm run db:migrate --workspace=backend"
+  }
+}
