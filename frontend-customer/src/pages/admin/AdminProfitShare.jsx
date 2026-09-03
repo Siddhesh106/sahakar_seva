@@ -5,13 +5,46 @@ import { PieChart, TrendingUp, DollarSign, Calendar, Users, Loader2 } from 'luci
 export default function AdminProfitShare() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [triggering, setTriggering] = useState(false);
+  const [payoutResult, setPayoutResult] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const res = await apiFetch('/coop/coop-pune-001/profit-share');
+      setData(res);
+    } catch (err) {
+      console.error('Profit share error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    apiFetch('/coop/coop-pune-001/profit-share')
-      .then((res) => setData(res))
-      .catch((err) => console.error(err))
-      .finally(() => setLoading(false));
+    fetchData();
   }, []);
+
+  const currentSurplus = data?.current_period?.total_surplus || 15750.00;
+  const memberEstimate = Math.round((currentSurplus / 15) * 100) / 100;
+
+  const handleTriggerPayout = async () => {
+    setTriggering(true);
+    setPayoutResult(null);
+    try {
+      const res = await apiFetch('/coop/coop-pune-001/profit-share/distribute', {
+        method: 'POST',
+        body: JSON.stringify({
+          amount: currentSurplus,
+          period_label: data?.current_period?.period_label,
+        }),
+      });
+      setPayoutResult(res);
+      await fetchData();
+    } catch (err) {
+      alert('Distribution Error: ' + err.message);
+    } finally {
+      setTriggering(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -21,20 +54,6 @@ export default function AdminProfitShare() {
       </div>
     );
   }
-
-  const [triggering, setTriggering] = useState(false);
-  const [triggeredSuccess, setTriggeredSuccess] = useState(false);
-
-  const currentSurplus = data?.current_period?.total_surplus || 15750.00;
-  const memberEstimate = Math.round((currentSurplus / 15) * 100) / 100;
-
-  const handleTriggerPayout = () => {
-    setTriggering(true);
-    setTimeout(() => {
-      setTriggering(false);
-      setTriggeredSuccess(true);
-    }, 1500);
-  };
 
   return (
     <div className="p-6 sm:p-8 max-w-[1240px] mx-auto px-4 sm:px-6 space-y-8 pb-24">
@@ -46,15 +65,15 @@ export default function AdminProfitShare() {
       </div>
 
       {/* Dividend Trigger Toast */}
-      {triggeredSuccess && (
-        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-4 rounded-2xl flex items-center justify-between shadow-sm animate-fade-in">
+      {payoutResult && (
+        <div className="bg-[#4edea3]/10 border border-[#4edea3]/30 text-[#4edea3] p-4 rounded-2xl flex items-center justify-between shadow-sm animate-fade-in">
           <div>
-            <p className="text-sm font-bold">Dividend Payout of ₹{memberEstimate}/member Dispatched!</p>
-            <p className="text-xs text-emerald-400/80">Funds credited directly to 15 verified member cooperative wallets.</p>
+            <p className="text-sm font-bold">Dividend Payout of ₹{payoutResult.per_member_dividend}/member Dispatched!</p>
+            <p className="text-xs text-[#4edea3]/80">Surplus of ₹{payoutResult.total_surplus} credited directly to {payoutResult.member_count} verified member cooperative wallets.</p>
           </div>
           <button
-            onClick={() => setTriggeredSuccess(false)}
-            className="text-xs font-bold text-emerald-300 bg-emerald-500/20 hover:bg-emerald-500/30 px-3 py-1.5 rounded-lg transition cursor-pointer"
+            onClick={() => setPayoutResult(null)}
+            className="text-xs font-bold text-[#4edea3] bg-[#4edea3]/20 hover:bg-[#4edea3]/30 px-3 py-1.5 rounded-lg transition cursor-pointer"
           >
             Dismiss
           </button>
