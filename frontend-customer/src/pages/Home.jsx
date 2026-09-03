@@ -37,36 +37,47 @@ export default function Home() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       {/* Banner */}
-      <div className="bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-2xl p-8 text-white shadow-xl mb-10 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div>
-          <span className="inline-block bg-indigo-500/40 text-indigo-100 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
-            Fair Match Guaranteed
-          </span>
-          <h1 className="text-3xl font-extrabold tracking-tight">Cooperative Household Services</h1>
-          <p className="text-indigo-100 mt-2 max-w-xl text-sm leading-relaxed">
-            Directly connect with verified cooperative members near you. 100% transparent pricing and guaranteed profit-sharing for gig workers.
-          </p>
-        </div>
-        <div className="grid grid-cols-2 gap-4 bg-white/10 p-4 rounded-xl backdrop-blur-sm text-center min-w-[220px]">
-          <div>
-            <span className="text-2xl font-bold">100%</span>
-            <p className="text-xs text-indigo-200">Verified Workers</p>
+      <div className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 rounded-3xl p-8 md:p-10 text-white shadow-2xl mb-8 border border-indigo-700/40">
+        <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+          <div className="max-w-xl">
+            <div className="inline-flex items-center gap-2 bg-indigo-500/20 text-indigo-300 text-xs font-semibold px-3 py-1.5 rounded-full border border-indigo-400/20 uppercase tracking-wider mb-4">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              Pune Cooperative Network Active
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight text-white">
+              Fair-Matched Household Services
+            </h1>
+            <p className="text-slate-300 mt-3 text-sm sm:text-base leading-relaxed">
+              Connect directly with verified cooperative members in your neighborhood. Fixed transparent rates, zero algorithmic exploitation, and guaranteed profit-sharing.
+            </p>
           </div>
-          <div>
-            <span className="text-2xl font-bold">0%</span>
-            <p className="text-xs text-indigo-200">Corporate Cut</p>
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 bg-white/5 border border-white/10 p-5 rounded-2xl backdrop-blur-md text-center min-w-[240px] shadow-inner">
+            <div className="p-2">
+              <span className="text-3xl font-extrabold text-white tracking-tight">8.5%</span>
+              <p className="text-[11px] text-indigo-300 mt-1 uppercase font-medium tracking-wider">Capped Fee</p>
+            </div>
+            <div className="p-2 border-l border-white/10">
+              <span className="text-3xl font-extrabold text-emerald-400 tracking-tight">91.5%</span>
+              <p className="text-[11px] text-emerald-300/80 mt-1 uppercase font-medium tracking-wider">Worker Payout</p>
+            </div>
           </div>
         </div>
       </div>
 
       {/* AI Request Classification Bar */}
-      <div className="bg-white rounded-2xl p-6 border border-indigo-100 shadow-md mb-10">
-        <div className="flex items-center gap-2 text-indigo-600 font-bold text-sm mb-2">
-          <Sparkles className="w-5 h-5 text-indigo-600 animate-pulse" />
-          <span>AI Service Assistant — Describe Your Problem in Plain Words</span>
+      <div className="relative overflow-hidden bg-white rounded-2xl p-6 sm:p-7 border border-indigo-100/80 shadow-lg shadow-indigo-950/5 mb-10 transition-all hover:border-indigo-300">
+        <div className="flex items-center gap-2.5 text-indigo-600 font-bold text-sm mb-1.5">
+          <div className="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-indigo-600 animate-pulse" />
+          </div>
+          <span className="text-slate-900 font-bold text-base">AI Problem Assistant</span>
+          <span className="text-xs bg-indigo-50 text-indigo-600 font-medium px-2 py-0.5 rounded-md border border-indigo-200/50">
+            Natural Language
+          </span>
         </div>
-        <p className="text-xs text-slate-500 mb-4">
-          Type naturally in Hindi or English (e.g., "My bedroom fan stopped working and need electrician today" or "नल से पानी टपक रहा है")
+        <p className="text-xs text-slate-500 mb-4 pl-9">
+          Describe the problem in your own words in English or Hindi (e.g., <em>"bedroom fan stopped working need electrician"</em> or <em>"kitchen pipe leak"</em>)
         </p>
         <form
           onSubmit={async (e) => {
@@ -86,19 +97,21 @@ export default function Home() {
               navigate(`/book/electrical?notes=${encodeURIComponent(input)}`);
             }
           }}
-          className="flex flex-col sm:flex-row gap-3"
+          className="flex flex-col sm:flex-row gap-3 pl-0 sm:pl-9"
         >
-          <input
-            name="prompt"
-            type="text"
-            placeholder="e.g. My ceiling fan stopped working, need urgent fix..."
-            className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
+          <div className="relative flex-1">
+            <input
+              name="prompt"
+              type="text"
+              placeholder="Type your household problem here..."
+              className="w-full pl-4 pr-4 py-3.5 bg-slate-50/80 hover:bg-slate-50 focus:bg-white border border-slate-200 focus:border-indigo-500 rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 transition"
+            />
+          </div>
           <button
             type="submit"
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-xl text-sm shadow transition flex items-center justify-center gap-2 whitespace-nowrap"
+            className="bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white font-semibold px-6 py-3.5 rounded-xl text-sm shadow-md shadow-indigo-600/20 transition flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
           >
-            <Sparkles className="w-4 h-4" /> AI Understand & Book
+            <Sparkles className="w-4 h-4" /> Match Service
           </button>
         </form>
       </div>
