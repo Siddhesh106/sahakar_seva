@@ -54,6 +54,16 @@ export function AuthProvider({ children }) {
     return res;
   };
 
+  const refreshUser = async () => {
+    try {
+      const res = await apiFetch('/users/me');
+      setUser(res.user);
+      return res.user;
+    } catch (err) {
+      console.error('Failed to refresh user:', err);
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem('token');
     setToken(null);
@@ -62,7 +72,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, token, loading, requestOtp, verifyOtp, registerUser, logout }}
+      value={{ user, setUser, token, loading, requestOtp, verifyOtp, registerUser, refreshUser, logout }}
     >
       {children}
     </AuthContext.Provider>

@@ -170,18 +170,41 @@ export default function BookingDetail() {
 
         {/* Content based on Status */}
         <div className="p-6 sm:p-8">
-          {/* Status: MATCHING */}
-          {status === 'matching' && (
+          {/* Status: REQUESTED or MATCHING */}
+          {(status === 'requested' || status === 'matching') && (
             <div className="text-center py-8">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-500/10 text-amber-400 mb-4 animate-pulse border border-amber-500/20">
                 <Loader2 className="w-8 h-8 animate-spin" />
               </div>
-              <h3 className="text-lg font-bold text-white">Finding a verified cooperative member near you...</h3>
+              <h3 className="text-lg font-bold text-white">
+                {status === 'requested' ? 'Processing cooperative service request...' : 'Finding a verified cooperative member near you...'}
+              </h3>
               <p className="text-sm text-[#908fa0] mt-2 max-w-md mx-auto">
                 Our Fair-Match engine is offering this job to the top qualified worker based on proximity, rating, and fairness scoring.
               </p>
               <div className="mt-6 inline-flex items-center gap-2 text-xs text-[#c0c1ff] bg-[#8083ff]/10 border border-[#8083ff]/20 px-4 py-2 rounded-full font-medium">
                 <ShieldCheck className="w-4 h-4" /> Live polling every 3 seconds
+              </div>
+            </div>
+          )}
+
+          {/* Status: CANCELLED */}
+          {status === 'cancelled' && (
+            <div className="text-center py-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-500/10 text-red-400 mb-4 border border-red-500/20">
+                <ShieldAlert className="w-8 h-8" />
+              </div>
+              <h3 className="text-lg font-bold text-white">No Cooperative Worker Available</h3>
+              <p className="text-sm text-[#908fa0] mt-2 max-w-md mx-auto">
+                All certified members in your cluster are currently on active duty or offline. No charges were made.
+              </p>
+              <div className="mt-6 flex justify-center gap-3">
+                <button
+                  onClick={() => navigate('/')}
+                  className="bg-gradient-to-r from-[#8083ff] to-[#c0c1ff] text-[#0a0e19] font-bold px-6 py-2.5 rounded-xl text-xs shadow-lg transition cursor-pointer"
+                >
+                  Browse Other Services
+                </button>
               </div>
             </div>
           )}

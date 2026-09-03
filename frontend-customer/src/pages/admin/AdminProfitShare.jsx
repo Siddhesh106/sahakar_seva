@@ -23,8 +23,9 @@ export default function AdminProfitShare() {
     fetchData();
   }, []);
 
-  const currentSurplus = data?.current_period?.total_surplus || 15750.00;
-  const memberEstimate = Math.round((currentSurplus / 15) * 100) / 100;
+  const currentSurplus = data?.current_period?.total_surplus ?? 15750.00;
+  const memberCount = data?.current_period?.member_count || 15;
+  const memberEstimate = Math.round((currentSurplus / memberCount) * 100) / 100;
 
   const handleTriggerPayout = async () => {
     setTriggering(true);
@@ -90,7 +91,7 @@ export default function AdminProfitShare() {
         <div>
           <span className="text-[11px] text-[#b4c5ff] font-bold uppercase tracking-wider">Est. Per-Member Dividend</span>
           <h2 className="text-3xl font-black text-emerald-400 mt-1">₹{memberEstimate}</h2>
-          <p className="text-xs text-[#b4c5ff]/80 mt-1">Based on 15 verified active members</p>
+          <p className="text-xs text-[#b4c5ff]/80 mt-1">Based on {memberCount} verified active members</p>
         </div>
 
         <div className="flex items-center justify-start md:justify-end">
@@ -144,6 +145,14 @@ export default function AdminProfitShare() {
                   </td>
                 </tr>
               ))}
+              {(!data?.ledger || data.ledger.length === 0) && (
+                <tr>
+                  <td colSpan={4} className="py-12 text-center text-[#908fa0]">
+                    <PieChart className="w-8 h-8 mx-auto mb-2 text-[#b4c5ff] opacity-50" />
+                    No surplus distributions recorded yet.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

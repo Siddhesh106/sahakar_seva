@@ -1,20 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { apiFetch } from '../../api';
+import { useAuth } from '../../context/AuthContext';
 import { ShieldCheck, Upload, CheckCircle2, Clock, AlertCircle } from 'lucide-react';
 
 export default function WorkerKyc() {
+  const { user, refreshUser } = useAuth();
   const [docType, setDocType] = useState('aadhaar');
   const [docNumber, setDocNumber] = useState('');
-  const [status, setStatus] = useState('verified'); // pending | verified | rejected
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [status, setStatus] = useState(user?.worker_profile?.kyc_status || 'verified');
+  const [previewUrl, setPreviewUrl] = useState(user?.worker_profile?.kyc_doc_image_url || null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    apiFetch('/users/me')
+      .then((res) => {
+        if (res.user?.worker_profile?.kyc_status) {
+          setStatus(res.user.worker_profile.kyc_status);
+        }
+        if (res.user?.worker_profile?.kyc_doc_number) {
+          setDocNumber(res.user.worker_profile.kyc_doc_number);
+        }
+        if (res.user?.worker_profile?.kyc_doc_type) {
+          setDocType(res.user.worker_profile.kyc_doc_type);
+        }
+        if (res.user?.worker_profile?.kyc_doc_image_url) {
+          setPreviewUrl(res.user.worker_profile.kyc_doc_image_url);
+        }
+      })
+      .catch((err) => console.error('KYC fetch error:', err));
+  }, []);
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -27,11 +51,12 @@ export default function WorkerKyc() {
         body: JSON.stringify({
           doc_type: docType,
           doc_number: docNumber,
-          doc_image_url: previewUrl || 'https://placeholder.co/400x250?text=KYC+Document',
+          doc_image_url: previewUrl || 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400&q=80',
         }),
       });
-      setStatus(res.kyc_status);
+      setStatus(res.kyc_status || 'pending');
       setSubmitted(true);
+      await refreshUser();
     } catch (err) {
       alert(err.message);
     } finally {

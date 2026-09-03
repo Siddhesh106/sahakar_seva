@@ -7,19 +7,20 @@ export default function History() {
   const [bookings, setBookings] = useState([]);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     apiFetch('/bookings?role=customer')
       .then((res) => setBookings(res.bookings || []))
-      .catch((err) => console.error(err))
+      .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
 
   const filtered = filter === 'all' ? bookings : bookings.filter((b) => b.status === filter);
 
   return (
-    <div className="max-w-[1240px] mx-auto px-4 sm:px-6 py-8">
+    <div className="max-w-[1240px] mx-auto px-4 sm:px-6 py-8 pb-24">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
         <div>
           <h1 className="text-2xl font-extrabold text-white">My Service Bookings</h1>
@@ -27,8 +28,8 @@ export default function History() {
         </div>
 
         {/* Filter buttons */}
-        <div className="flex gap-1.5 bg-[#171b27] p-1 rounded-xl border border-white/[0.08]">
-          {['all', 'matching', 'assigned', 'in_progress', 'completed'].map((f) => (
+        <div className="flex flex-wrap gap-1.5 bg-[#171b27] p-1 rounded-xl border border-white/[0.08]">
+          {['all', 'requested', 'matching', 'assigned', 'in_progress', 'completed', 'cancelled'].map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
@@ -42,6 +43,12 @@ export default function History() {
         </div>
       </div>
 
+      {error && (
+        <div className="bg-red-500/10 border border-red-500/20 text-red-300 p-4 rounded-2xl text-xs mb-6">
+          {error}
+        </div>
+      )}
+
       {loading ? (
         <div className="py-12 text-center text-[#908fa0]">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2 text-[#8083ff]" />
@@ -54,7 +61,7 @@ export default function History() {
           <p className="text-[#908fa0] text-sm mt-1 mb-6">You haven't placed any bookings matching this filter yet.</p>
           <button
             onClick={() => navigate('/')}
-            className="bg-gradient-to-r from-[#7c3aed] to-[#6366f1] hover:from-[#6d28d9] hover:to-[#4f46e5] text-white font-bold px-5 py-2.5 rounded-xl text-sm shadow-lg shadow-purple-600/25 transition cursor-pointer"
+            className="bg-gradient-to-r from-[#8083ff] to-[#c0c1ff] hover:brightness-110 text-[#0a0e19] font-black px-6 py-3 rounded-xl text-xs shadow-lg shadow-[#8083ff]/20 transition cursor-pointer"
           >
             Book a Service Now
           </button>

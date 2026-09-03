@@ -4,22 +4,31 @@ import { User, Phone, Globe, MapPin, ShieldCheck, Check } from 'lucide-react';
 import { apiFetch } from '../api';
 
 export default function Profile() {
-  const { user, registerUser } = useAuth();
+  const { user, refreshUser, setUser } = useAuth();
   const [name, setName] = useState(user?.name || '');
   const [lang, setLang] = useState(user?.language_pref || 'en');
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSaving(true);
     try {
-      await apiFetch('/users/me', {
+      const res = await apiFetch('/users/me', {
         method: 'PUT',
         body: JSON.stringify({ name, language_pref: lang }),
       });
+      if (res.user) {
+        setUser(res.user);
+      } else {
+        await refreshUser();
+      }
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (err) {
       alert(err.message);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -100,9 +109,10 @@ export default function Profile() {
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-[#7c3aed] to-[#6366f1] hover:from-[#6d28d9] hover:to-[#4f46e5] text-white font-bold py-3.5 rounded-xl shadow-lg shadow-purple-600/25 transition text-xs cursor-pointer"
+            disabled={saving}
+            className="w-full bg-gradient-to-r from-[#8083ff] to-[#c0c1ff] hover:from-[#9395ff] hover:to-[#d0d1ff] text-[#0a0e19] font-black py-3.5 rounded-xl shadow-lg shadow-[#8083ff]/20 transition text-xs cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            Save Changes
+            {saving ? 'Saving changes...' : 'Save Profile Changes'}
           </button>
         </form>
       </div>

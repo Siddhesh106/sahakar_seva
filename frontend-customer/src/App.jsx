@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import PersonaSwitcher from './components/PersonaSwitcher';
 import AuthorityGuard from './components/AuthorityGuard';
 import Navbar from './components/Navbar';
 import WorkerNavbar from './components/WorkerNavbar';
@@ -46,7 +45,7 @@ function CustomerLayout({ children }) {
 
 function WorkerLayout({ children }) {
   return (
-    <div className="min-h-screen bg-[#0f131e] text-[#dfe2f2] flex flex-col selection:bg-[#4edea3] selection:text-[#003824]">
+    <div className="min-h-screen bg-[#0f131e] text-[#dfe2f2] flex flex-col selection:bg-[#4edea3] selection:text-[#003824] pb-16 md:pb-0">
       <Navbar />
       <WorkerNavbar />
       <main className="flex-1">{children}</main>
@@ -146,7 +145,7 @@ export default function App() {
           <Route
             path="/profile"
             element={
-              <AuthorityGuard allowedRoles={['customer', 'coop_admin']}>
+              <AuthorityGuard allowedRoles={['customer', 'worker', 'coop_admin']}>
                 <CustomerLayout>
                   <Profile />
                 </CustomerLayout>

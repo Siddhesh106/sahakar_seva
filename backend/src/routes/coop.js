@@ -117,6 +117,7 @@ router.get('/:id/profit-share', authenticate, roleGuard('coop_admin'), async (re
         period_label: currentQuarter,
         total_surplus: Math.round(surplusValue * 100) / 100,
         total_payments: payments.length,
+        member_count: workerIds.length || 15,
       }
     });
   } catch (err) {

@@ -89,13 +89,28 @@ export default function AdminVerifications() {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-xs font-mono">
-                    <span className="font-bold uppercase text-[#c7c4d7]">{w.kyc_doc_type || 'Aadhaar'}</span>
-                    <p className="text-[#908fa0]">{w.kyc_doc_number || '1234 5678 9012'}</p>
+                    <div className="flex items-center gap-2">
+                      <div>
+                        <span className="font-bold uppercase text-[#c7c4d7]">{w.kyc_doc_type || 'Aadhaar'}</span>
+                        <p className="text-[#908fa0]">{w.kyc_doc_number || 'Doc on file'}</p>
+                      </div>
+                      {w.kyc_doc_image_url && (
+                        <a
+                          href={w.kyc_doc_image_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="bg-[#1b1f2b] hover:bg-[#262a36] border border-white/[0.08] text-[#b4c5ff] p-1.5 rounded-lg text-[10px] font-sans flex items-center gap-1 transition"
+                          title="View Uploaded Document"
+                        >
+                          <FileText className="w-3.5 h-3.5" /> View
+                        </a>
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-4">
                     <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider inline-flex items-center gap-1 ${
-                      w.kyc_status === 'verified' ? 'bg-emerald-100 text-emerald-700' :
-                      w.kyc_status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
+                      w.kyc_status === 'verified' ? 'bg-[#4edea3]/10 text-[#4edea3] border border-[#4edea3]/20' :
+                      w.kyc_status === 'pending' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'
                     }`}>
                       {w.kyc_status}
                     </span>
@@ -105,7 +120,7 @@ export default function AdminVerifications() {
                       <button
                         onClick={() => handleVerify(w.user_id, 'verified')}
                         disabled={processingId === w.user_id}
-                        className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer"
+                        className="bg-gradient-to-r from-[#4edea3] to-[#00a572] hover:brightness-110 disabled:opacity-50 text-[#003824] px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer"
                       >
                         {processingId === w.user_id ? 'Updating...' : 'Approve'}
                       </button>
@@ -122,6 +137,14 @@ export default function AdminVerifications() {
                   </td>
                 </tr>
               ))}
+              {workers.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="py-12 text-center text-[#908fa0]">
+                    <UserCheck className="w-8 h-8 mx-auto mb-2 text-[#b4c5ff] opacity-50" />
+                    No worker members in this cooperative yet.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

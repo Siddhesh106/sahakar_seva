@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { ShieldCheck, Bell, User as UserIcon, LogOut, ChevronDown, Check } from 'lucide-react';
+import { ShieldCheck, Bell, User as UserIcon, LogOut } from 'lucide-react';
 
 export default function Navbar() {
   const { user, verifyOtp, logout } = useAuth();
