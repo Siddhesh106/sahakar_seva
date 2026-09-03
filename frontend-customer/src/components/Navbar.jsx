@@ -10,8 +10,6 @@ export default function Navbar() {
   const [switching, setSwitching] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
-  if (!user) return null;
-
   const personas = [
     { role: 'customer', label: 'Consumer', phone: '9000000001', path: '/' },
     { role: 'worker', label: 'Worker', phone: '9000000013', path: '/worker' },
@@ -19,7 +17,7 @@ export default function Navbar() {
   ];
 
   const handlePersonaSwitch = async (p) => {
-    if (user.role === p.role) {
+    if (user && user.role === p.role) {
       navigate(p.path);
       return;
     }
@@ -29,22 +27,23 @@ export default function Navbar() {
       navigate(p.path);
     } catch (err) {
       console.error('Persona switch error:', err);
+      navigate(p.path);
     } finally {
       setSwitching(false);
     }
   };
 
   const navLinks = [
-    { label: 'Home', path: '/', targetRole: 'customer' },
+    { label: 'Marketplace', path: '/', targetRole: 'customer' },
     { label: 'My Bookings', path: '/history', targetRole: 'customer' },
-    { label: 'Fair-Match Transparency', path: '/worker', targetRole: 'worker' },
+    { label: 'Worker Member Hub', path: '/worker', targetRole: 'worker' },
     { label: 'Coop Governance', path: '/admin', targetRole: 'coop_admin' },
     { label: 'Profile', path: '/profile' },
   ];
 
   const handleNavClick = async (e, link) => {
     e.preventDefault();
-    if (link.targetRole && user.role !== link.targetRole) {
+    if (link.targetRole && (!user || user.role !== link.targetRole)) {
       setSwitching(true);
       try {
         const targetPersona = personas.find((p) => p.role === link.targetRole);
@@ -144,41 +143,50 @@ export default function Navbar() {
             <Bell className="w-4 h-4" />
           </button>
 
-          {/* Profile / Logout Menu */}
-          <div className="relative">
-            <button
-              onClick={() => setShowProfileMenu(!showProfileMenu)}
-              className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#8083ff]/30 to-[#618bff]/30 border border-[#c0c1ff]/30 text-[#c0c1ff] hover:border-[#c0c1ff] flex items-center justify-center font-bold text-xs transition cursor-pointer"
-              title="Account Menu"
-            >
-              {user.name?.charAt(0) || 'U'}
-            </button>
+          {/* Profile / Logout Menu or Sign In */}
+          {user ? (
+            <div className="relative">
+              <button
+                onClick={() => setShowProfileMenu(!showProfileMenu)}
+                className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#8083ff]/30 to-[#618bff]/30 border border-[#c0c1ff]/30 text-[#c0c1ff] hover:border-[#c0c1ff] flex items-center justify-center font-bold text-xs transition cursor-pointer"
+                title="Account Menu"
+              >
+                {user.name?.charAt(0) || 'U'}
+              </button>
 
-            {showProfileMenu && (
-              <div className="absolute right-0 mt-2 w-56 bg-[#1b1f2b] border border-white/[0.12] rounded-2xl p-2 shadow-2xl z-50 animate-fade-in text-xs">
-                <div className="p-2.5 border-b border-white/[0.08] mb-1">
-                  <p className="font-bold text-white text-sm">{user.name || 'Member'}</p>
-                  <p className="text-[11px] text-[#908fa0] font-mono">+91 {user.phone}</p>
-                  <span className="inline-block mt-1 bg-[#8083ff]/15 text-[#c0c1ff] border border-[#8083ff]/30 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
-                    {user.role} authority
-                  </span>
+              {showProfileMenu && (
+                <div className="absolute right-0 mt-2 w-56 bg-[#1b1f2b] border border-white/[0.12] rounded-2xl p-2 shadow-2xl z-50 animate-fade-in text-xs">
+                  <div className="p-2.5 border-b border-white/[0.08] mb-1">
+                    <p className="font-bold text-white text-sm">{user.name || 'Member'}</p>
+                    <p className="text-[11px] text-[#908fa0] font-mono">+91 {user.phone}</p>
+                    <span className="inline-block mt-1 bg-[#8083ff]/15 text-[#c0c1ff] border border-[#8083ff]/30 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
+                      {user.role} authority
+                    </span>
+                  </div>
+                  <Link
+                    to="/profile"
+                    onClick={() => setShowProfileMenu(false)}
+                    className="flex items-center gap-2 p-2 rounded-xl text-[#c7c4d7] hover:text-white hover:bg-white/[0.06] transition"
+                  >
+                    <UserIcon className="w-4 h-4" /> Profile Settings
+                  </Link>
+                  <button
+                    onClick={() => { logout(); navigate('/login'); }}
+                    className="w-full text-left flex items-center gap-2 p-2 rounded-xl text-red-400 hover:bg-red-950/40 transition cursor-pointer"
+                  >
+                    <LogOut className="w-4 h-4" /> Sign Out
+                  </button>
                 </div>
-                <Link
-                  to="/profile"
-                  onClick={() => setShowProfileMenu(false)}
-                  className="flex items-center gap-2 p-2 rounded-xl text-[#c7c4d7] hover:text-white hover:bg-white/[0.06] transition"
-                >
-                  <UserIcon className="w-4 h-4" /> Profile Settings
-                </Link>
-                <button
-                  onClick={() => { logout(); navigate('/login'); }}
-                  className="w-full text-left flex items-center gap-2 p-2 rounded-xl text-red-400 hover:bg-red-950/40 transition cursor-pointer"
-                >
-                  <LogOut className="w-4 h-4" /> Sign Out
-                </button>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="bg-gradient-to-r from-[#8083ff] to-[#c0c1ff] hover:brightness-110 text-[#0a0e19] font-black px-3.5 py-1.5 rounded-full text-xs transition shadow-md cursor-pointer"
+            >
+              Sign In
+            </Link>
+          )}
 
         </div>
 

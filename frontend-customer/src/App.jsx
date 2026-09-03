@@ -72,16 +72,15 @@ function AdminLayout({ children }) {
 function RootDispatcher() {
   const { user, loading } = useAuth();
   if (loading) return null;
-  if (!user) return <Navigate to="/login" replace />;
 
-  if (user.role === 'worker') {
+  if (user?.role === 'worker') {
     return <Navigate to="/worker" replace />;
   }
-  if (user.role === 'coop_admin') {
+  if (user?.role === 'coop_admin') {
     return <Navigate to="/admin" replace />;
   }
 
-  // Customers see the Marketplace Home
+  // Customers and Guests see the Marketplace Home
   return (
     <CustomerLayout>
       <Home />
@@ -101,15 +100,13 @@ export default function App() {
           {/* Root Dynamic Authority Dispatcher */}
           <Route path="/" element={<RootDispatcher />} />
 
-          {/* 🧑 CUSTOMER WORKSPACE (Authority: customer, coop_admin) */}
+          {/* 🧑 CUSTOMER WORKSPACE */}
           <Route
             path="/customer"
             element={
-              <AuthorityGuard allowedRoles={['customer', 'coop_admin']}>
-                <CustomerLayout>
-                  <Home />
-                </CustomerLayout>
-              </AuthorityGuard>
+              <CustomerLayout>
+                <Home />
+              </CustomerLayout>
             }
           />
           <Route
