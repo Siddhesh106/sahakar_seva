@@ -1,0 +1,10 @@
+{
+  "buildCommand": "npm --prefix frontend-customer install && npm --prefix frontend-customer run build",
+  "outputDirectory": "frontend-customer/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

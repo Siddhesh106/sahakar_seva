@@ -10,7 +10,7 @@
     "frontend-admin"
   ],
   "scripts": {
-    "build": "npm run build --workspace=frontend-customer",
+    "build": "npm --prefix frontend-customer run build",
     "dev:backend": "npm run dev --workspace=backend",
     "dev:customer": "npm run dev --workspace=frontend-customer",
     "dev:worker": "npm run dev --workspace=frontend-worker",
