@@ -35,12 +35,33 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { label: 'Home', path: '/' },
-    { label: 'My Bookings', path: '/history' },
-    { label: 'Fair-Match Transparency', path: user.role === 'worker' ? '/worker' : '/#fair-match' },
-    { label: 'Coop Governance', path: '/admin' },
+    { label: 'Home', path: '/', targetRole: 'customer' },
+    { label: 'My Bookings', path: '/history', targetRole: 'customer' },
+    { label: 'Fair-Match Transparency', path: '/worker', targetRole: 'worker' },
+    { label: 'Coop Governance', path: '/admin', targetRole: 'coop_admin' },
     { label: 'Profile', path: '/profile' },
   ];
+
+  const handleNavClick = async (e, link) => {
+    e.preventDefault();
+    if (link.targetRole && user.role !== link.targetRole) {
+      setSwitching(true);
+      try {
+        const targetPersona = personas.find((p) => p.role === link.targetRole);
+        if (targetPersona) {
+          await verifyOtp(targetPersona.phone, '123456');
+        }
+        navigate(link.path);
+      } catch (err) {
+        console.error('Nav switch error:', err);
+        navigate(link.path);
+      } finally {
+        setSwitching(false);
+      }
+    } else {
+      navigate(link.path);
+    }
+  };
 
   return (
     <header className="bg-[#0f131e]/95 backdrop-blur-xl border-b border-white/[0.08] sticky top-0 z-50 text-white shadow-2xl">
@@ -74,17 +95,18 @@ export default function Navbar() {
         {/* Center: Main Navigation */}
         <nav className="hidden md:flex items-center gap-6 text-xs font-medium text-[#c7c4d7]">
           {navLinks.map((link) => {
-            const isActive = location.pathname === link.path || (link.path === '/' && location.pathname === '/customer');
+            const isActive = location.pathname === link.path || (link.path === '/' && (location.pathname === '/customer' || location.pathname === '/'));
             return (
-              <Link
+              <a
                 key={link.label}
-                to={link.path}
-                className={`transition-colors hover:text-white ${
+                href={link.path}
+                onClick={(e) => handleNavClick(e, link)}
+                className={`transition-colors hover:text-white cursor-pointer ${
                   isActive ? 'text-white font-semibold' : ''
                 }`}
               >
                 {link.label}
-              </Link>
+              </a>
             );
           })}
         </nav>
