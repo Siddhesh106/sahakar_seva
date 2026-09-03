@@ -96,18 +96,18 @@ export default function BookingDetail() {
   if (loading) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center">
-        <Loader2 className="w-10 h-10 text-indigo-600 animate-spin mb-4" />
-        <p className="text-slate-500 text-sm">Loading booking details...</p>
+        <Loader2 className="w-10 h-10 text-[#8083ff] animate-spin mb-4" />
+        <p className="text-[#908fa0] text-sm">Loading booking details...</p>
       </div>
     );
   }
 
   if (error || !booking) {
     return (
-      <div className="max-w-xl mx-auto my-12 p-6 bg-red-50 text-red-600 rounded-xl border border-red-100 text-center">
+      <div className="max-w-xl mx-auto my-12 p-6 bg-red-950/40 text-red-300 rounded-2xl border border-red-800/60 text-center">
         <AlertCircle className="w-8 h-8 mx-auto mb-2" />
         <p>{error || 'Booking not found'}</p>
-        <button onClick={() => navigate('/')} className="mt-4 text-xs font-semibold underline">Return Home</button>
+        <button onClick={() => navigate('/')} className="mt-4 text-xs font-semibold underline cursor-pointer">Return Home</button>
       </div>
     );
   }
@@ -115,39 +115,39 @@ export default function BookingDetail() {
   const { status, category, assigned_worker, price, address_text } = booking;
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-[1240px] mx-auto px-4 sm:px-6 py-8">
       <button
         onClick={() => navigate('/history')}
-        className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 transition mb-6"
+        className="flex items-center gap-1.5 text-xs font-semibold text-[#908fa0] hover:text-white transition mb-6 cursor-pointer"
       >
         <ArrowLeft className="w-4 h-4" /> All Bookings
       </button>
 
       {/* Main Card */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-6">
+      <div className="bg-[#171b27]/90 rounded-3xl border border-white/[0.08] shadow-2xl overflow-hidden mb-6">
         {/* Header */}
-        <div className="bg-slate-900 text-white p-6 flex items-center justify-between">
+        <div className="bg-[#1b1f2b] p-6 sm:p-7 border-b border-white/[0.08] flex items-center justify-between">
           <div>
-            <span className="text-xs text-indigo-400 font-semibold uppercase tracking-wider">Booking #{booking.id.slice(0, 8)}</span>
-            <h1 className="text-xl font-bold mt-0.5">{category?.name?.toUpperCase() || 'Service'}</h1>
-            <p className="text-xs text-slate-400 mt-1">📍 {address_text}</p>
+            <span className="text-[11px] text-[#c0c1ff] font-bold uppercase tracking-wider block">Booking #{booking.id.slice(0, 8)}</span>
+            <h1 className="text-xl sm:text-2xl font-extrabold text-white mt-0.5">{category?.name?.toUpperCase() || 'SERVICE'}</h1>
+            <p className="text-xs text-[#908fa0] mt-1 flex items-center gap-1">📍 {address_text}</p>
           </div>
           <div className="text-right">
             <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
               status === 'matching' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' :
-              status === 'assigned' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' :
+              status === 'assigned' ? 'bg-[#8083ff]/20 text-[#c0c1ff] border border-[#8083ff]/30' :
               status === 'in_progress' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' :
-              status === 'completed' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' :
-              'bg-slate-700 text-slate-300'
+              status === 'completed' ? 'bg-[#4edea3]/20 text-[#4edea3] border border-[#4edea3]/30' :
+              'bg-white/[0.06] text-[#908fa0] border border-white/[0.08]'
             }`}>
               {status.replace('_', ' ')}
             </span>
-            <p className="text-lg font-bold mt-2">₹{price}</p>
+            <p className="text-xl font-extrabold text-white mt-2">₹{price}</p>
           </div>
         </div>
 
         {/* Status Timeline */}
-        <div className="p-6 border-b border-slate-100 bg-slate-50/50">
+        <div className="p-6 border-b border-white/[0.06] bg-[#121624]/60">
           <div className="flex items-center justify-between max-w-md mx-auto">
             {['requested', 'matching', 'assigned', 'in_progress', 'completed'].map((step, idx) => {
               const currentIdx = ['requested', 'matching', 'assigned', 'in_progress', 'completed'].indexOf(status);
@@ -155,11 +155,11 @@ export default function BookingDetail() {
               return (
                 <div key={step} className="flex flex-col items-center relative z-10">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition ${
-                    isPassed ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-200 text-slate-400'
+                    isPassed ? 'bg-gradient-to-r from-[#8083ff] to-[#6366f1] text-white shadow-md shadow-[#8083ff]/30' : 'bg-[#1b1f2b] text-[#908fa0] border border-white/[0.08]'
                   }`}>
                     {isPassed ? <CheckCircle2 className="w-4 h-4" /> : idx + 1}
                   </div>
-                  <span className="text-[10px] uppercase font-semibold text-slate-500 mt-1.5 capitalize">
+                  <span className="text-[10px] uppercase font-semibold text-[#908fa0] mt-1.5 capitalize">
                     {step.replace('_', ' ')}
                   </span>
                 </div>
@@ -169,18 +169,18 @@ export default function BookingDetail() {
         </div>
 
         {/* Content based on Status */}
-        <div className="p-8">
+        <div className="p-6 sm:p-8">
           {/* Status: MATCHING */}
           {status === 'matching' && (
             <div className="text-center py-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-100 text-amber-600 mb-4 animate-pulse">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-500/10 text-amber-400 mb-4 animate-pulse border border-amber-500/20">
                 <Loader2 className="w-8 h-8 animate-spin" />
               </div>
-              <h3 className="text-lg font-bold text-slate-800">Finding a verified cooperative member near you...</h3>
-              <p className="text-sm text-slate-500 mt-2 max-w-md mx-auto">
+              <h3 className="text-lg font-bold text-white">Finding a verified cooperative member near you...</h3>
+              <p className="text-sm text-[#908fa0] mt-2 max-w-md mx-auto">
                 Our Fair-Match engine is offering this job to the top qualified worker based on proximity, rating, and fairness scoring.
               </p>
-              <div className="mt-6 inline-flex items-center gap-2 text-xs text-indigo-600 bg-indigo-50 px-4 py-2 rounded-full font-medium">
+              <div className="mt-6 inline-flex items-center gap-2 text-xs text-[#c0c1ff] bg-[#8083ff]/10 border border-[#8083ff]/20 px-4 py-2 rounded-full font-medium">
                 <ShieldCheck className="w-4 h-4" /> Live polling every 3 seconds
               </div>
             </div>
@@ -189,16 +189,16 @@ export default function BookingDetail() {
           {/* Status: ASSIGNED or IN_PROGRESS */}
           {(status === 'assigned' || status === 'in_progress') && assigned_worker && (
             <div className="space-y-6">
-              <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 flex items-center justify-between">
+              <div className="bg-[#1b1f2b] p-6 rounded-2xl border border-white/[0.08] flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xl font-bold shadow">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#8083ff] to-[#6366f1] text-white flex items-center justify-center text-xl font-bold shadow-lg">
                     {assigned_worker.name?.charAt(0) || 'W'}
                   </div>
                   <div>
-                    <span className="text-xs text-indigo-600 font-semibold uppercase">Assigned Member</span>
-                    <h3 className="text-lg font-bold text-slate-800">{assigned_worker.name}</h3>
-                    <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
-                      <span className="flex items-center gap-1 text-amber-600 font-semibold">
+                    <span className="text-[11px] text-[#c0c1ff] font-bold uppercase tracking-wider">Assigned Member</span>
+                    <h3 className="text-lg font-bold text-white">{assigned_worker.name}</h3>
+                    <div className="flex items-center gap-2 text-xs text-[#908fa0] mt-1">
+                      <span className="flex items-center gap-1 text-amber-400 font-bold">
                         <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                         {assigned_worker.worker_profile?.rating_avg || '5.0'}
                       </span>
@@ -208,14 +208,14 @@ export default function BookingDetail() {
                 </div>
                 <a
                   href={`tel:${assigned_worker.phone}`}
-                  className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition shadow-sm"
+                  className="flex items-center gap-2 bg-gradient-to-r from-[#4edea3] to-[#00a572] text-[#003824] font-bold px-4 py-2.5 rounded-xl text-xs transition shadow-md shadow-emerald-500/20"
                 >
                   <Phone className="w-4 h-4" /> Call Worker
                 </a>
               </div>
 
-              <div className="bg-purple-50 text-purple-700 p-4 rounded-xl text-sm border border-purple-100 flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full bg-purple-500 animate-ping" />
+              <div className="bg-[#8083ff]/10 text-[#c0c1ff] p-4 rounded-2xl text-xs border border-[#8083ff]/20 flex items-center gap-3">
+                <div className="w-2.5 h-2.5 rounded-full bg-[#8083ff] animate-ping" />
                 <span>
                   {status === 'assigned' ? 'Worker is on their way to your address.' : 'Worker is currently performing the service.'}
                 </span>
@@ -227,41 +227,41 @@ export default function BookingDetail() {
           {status === 'completed' && (
             <div className="space-y-8">
               {/* Payment Section */}
-              <div className="bg-slate-50 p-6 rounded-xl border border-slate-200">
-                <h3 className="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
-                  <CreditCard className="w-5 h-5 text-indigo-600" /> Payment Details
+              <div className="bg-[#1b1f2b] p-6 rounded-2xl border border-white/[0.08]">
+                <h3 className="text-base font-bold text-white mb-4 flex items-center gap-2">
+                  <CreditCard className="w-5 h-5 text-[#c0c1ff]" /> Payment Settlement (Consensus Cap)
                 </h3>
 
-                <div className="space-y-2 text-sm text-slate-600 border-b border-slate-200 pb-4 mb-4">
+                <div className="space-y-2 text-xs text-[#c7c4d7] border-b border-white/[0.08] pb-4 mb-4">
                   <div className="flex justify-between">
                     <span>Base Service Price</span>
-                    <span className="font-semibold">₹{price}</span>
+                    <span className="font-bold text-white">₹{price}</span>
                   </div>
-                  <div className="flex justify-between text-xs text-slate-400">
+                  <div className="flex justify-between text-[#908fa0]">
                     <span>Cooperative Society Platform Fee (8.5%)</span>
                     <span>₹{(price * 0.085).toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between text-xs text-slate-400">
-                    <span>Direct Worker Payout</span>
+                  <div className="flex justify-between text-[#4edea3] font-bold">
+                    <span>Direct Worker Payout (91.5%)</span>
                     <span>₹{(price * 0.915).toFixed(2)}</span>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-xs text-slate-400">Total Amount Payable</span>
-                    <p className="text-xl font-bold text-slate-800">₹{price}</p>
+                    <span className="text-[11px] text-[#908fa0]">Total Amount Payable</span>
+                    <p className="text-2xl font-extrabold text-white">₹{price}</p>
                   </div>
 
                   {paymentDone || booking.payment?.status === 'success' ? (
-                    <div className="flex items-center gap-2 text-emerald-600 bg-emerald-50 px-4 py-2 rounded-lg font-bold text-sm border border-emerald-200">
-                      <CheckCircle2 className="w-5 h-5" /> Paid via UPI
+                    <div className="flex items-center gap-2 text-[#4edea3] bg-[#4edea3]/15 px-4 py-2.5 rounded-xl font-bold text-xs border border-[#4edea3]/30">
+                      <CheckCircle2 className="w-4 h-4" /> Paid via UPI
                     </div>
                   ) : (
                     <button
                       onClick={handlePay}
                       disabled={initiatingPayment}
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-lg shadow-md transition disabled:opacity-50 text-sm flex items-center gap-2"
+                      className="bg-gradient-to-r from-[#4edea3] to-[#00a572] text-[#003824] font-black px-6 py-3 rounded-xl shadow-lg shadow-emerald-500/20 transition disabled:opacity-50 text-xs flex items-center gap-2 cursor-pointer"
                     >
                       {initiatingPayment ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Pay Now via UPI (₹' + price + ')'}
                     </button>
@@ -270,46 +270,46 @@ export default function BookingDetail() {
               </div>
 
               {/* Rating Section */}
-              <div className="bg-indigo-50/50 p-6 rounded-xl border border-indigo-100">
-                <h3 className="text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
-                  <Star className="w-5 h-5 text-amber-500 fill-amber-400" /> Rate & Review Member
+              <div className="bg-[#1b1f2b] p-6 rounded-2xl border border-white/[0.08]">
+                <h3 className="text-base font-bold text-white mb-3 flex items-center gap-2">
+                  <Star className="w-5 h-5 text-amber-400 fill-amber-400" /> Rate & Review Member
                 </h3>
 
                 {ratingSubmitted ? (
-                  <div className="bg-emerald-50 text-emerald-700 p-4 rounded-lg text-sm border border-emerald-100 flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600" /> Thank you! Your feedback has been submitted to the cooperative.
+                  <div className="bg-[#4edea3]/15 text-[#4edea3] p-4 rounded-xl text-xs border border-[#4edea3]/30 flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#4edea3]" /> Thank you! Your feedback has been recorded on the cooperative ledger.
                   </div>
                 ) : (
                   <form onSubmit={handleRatingSubmit} className="space-y-4">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-600 uppercase mb-2">Rating</label>
+                      <label className="block text-xs font-bold text-[#c7c4d7] uppercase tracking-wider mb-2">Rating</label>
                       <div className="flex gap-2">
                         {[1, 2, 3, 4, 5].map((s) => (
                           <button
                             type="button"
                             key={s}
                             onClick={() => setStars(s)}
-                            className="p-2 transition"
+                            className="p-1 transition cursor-pointer"
                           >
-                            <Star className={`w-7 h-7 ${s <= stars ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`} />
+                            <Star className={`w-6 h-6 ${s <= stars ? 'fill-amber-400 text-amber-400' : 'text-[#464554]'}`} />
                           </button>
                         ))}
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-slate-600 uppercase mb-2">Comment (Optional)</label>
+                      <label className="block text-xs font-bold text-[#c7c4d7] uppercase tracking-wider mb-2">Comment (Optional)</label>
                       <textarea
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
                         placeholder="Write a few words about the service..."
                         rows="2"
-                        className="w-full p-3 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full p-3 bg-[#0f131e] border border-white/[0.08] rounded-xl text-xs text-white placeholder-[#6c6b7c] focus:outline-none focus:border-[#8083ff]"
                       />
                     </div>
                     <button
                       type="submit"
                       disabled={submittingRating}
-                      className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2 rounded-lg text-sm shadow transition disabled:opacity-50"
+                      className="bg-gradient-to-r from-[#7c3aed] to-[#6366f1] text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-md shadow-purple-600/20 transition disabled:opacity-50 cursor-pointer"
                     >
                       {submittingRating ? 'Submitting...' : 'Submit Rating'}
                     </button>

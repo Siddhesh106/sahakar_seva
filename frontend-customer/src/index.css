@@ -1,34 +1,72 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-surface: #0f131e;
+  --color-surface-dim: #0f131e;
+  --color-surface-bright: #353945;
+  --color-surface-lowest: #0a0e19;
+  --color-surface-low: #171b27;
+  --color-surface-card: #1b1f2b;
+  --color-surface-high: #262a36;
+  --color-surface-highest: #313441;
+  --color-on-surface: #dfe2f2;
+  --color-on-surface-variant: #c7c4d7;
+  --color-outline: #908fa0;
+  --color-outline-variant: #464554;
+  
+  --color-primary: #c0c1ff;
+  --color-primary-container: #8083ff;
+  --color-primary-dark: #6366f1;
+  --color-secondary: #4edea3;
+  --color-secondary-container: #00a572;
+  --color-tertiary: #b4c5ff;
+  --color-tertiary-container: #618bff;
+}
+
 @layer base {
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: #0f131e;
+    color: #dfe2f2;
   }
 }
 
-/* Custom micro-animations & glassmorphism */
-.glass-card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+/* Glassmorphic card and hairline borders */
+.sovereign-card {
+  background: rgba(27, 31, 43, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.gradient-border {
-  position: relative;
-  background: linear-gradient(60deg, #6366f1, #a855f7, #ec4899);
-  padding: 1px;
-  border-radius: 1rem;
+.sovereign-card-light {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
 }
 
-@keyframes pulseGlow {
+.hairline-border {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hairline-border-light {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+@keyframes ambientGlow {
   0%, 100% {
-    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+    opacity: 0.4;
   }
   50% {
-    box-shadow: 0 0 25px rgba(99, 102, 241, 0.6);
+    opacity: 0.7;
   }
 }
 
-.pulse-glow {
-  animation: pulseGlow 3s infinite ease-in-out;
+.ambient-glow {
+  animation: ambientGlow 6s ease-in-out infinite;
 }
+

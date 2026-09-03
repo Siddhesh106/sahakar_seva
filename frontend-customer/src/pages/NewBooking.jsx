@@ -67,46 +67,47 @@ export default function NewBooking() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
       <button
         onClick={() => navigate('/')}
-        className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 transition mb-6"
+        className="flex items-center gap-1.5 text-xs font-semibold text-[#908fa0] hover:text-white transition mb-6 cursor-pointer"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Services
       </button>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-6 mb-6">
+      <div className="bg-[#171b27]/90 border border-white/[0.08] rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+        <div className="flex items-center justify-between border-b border-white/[0.08] pb-6">
           <div>
-            <span className="text-xs font-semibold text-indigo-600 uppercase tracking-wider">New Booking</span>
-            <h1 className="text-2xl font-bold text-slate-800 mt-1">{service.name}</h1>
+            <span className="text-[11px] font-bold text-[#c0c1ff] uppercase tracking-wider block">Service Dispatch Order</span>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-1 capitalize">{service.name}</h1>
           </div>
           <div className="text-right">
-            <span className="text-2xl font-bold text-indigo-600">₹{service.base_price}</span>
-            <p className="text-xs text-slate-400">/{service.unit === 'per_hour' ? 'hr' : 'job'}</p>
+            <span className="text-3xl font-extrabold text-[#c0c1ff]">₹{service.base_price}</span>
+            <p className="text-xs text-[#908fa0]">/{service.unit === 'per_hour' || service.unit === 'hr' ? 'hr' : 'job'} (Fixed Capped)</p>
           </div>
         </div>
 
         {error && (
-          <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg mb-6 border border-red-100">
-            {error}
+          <div className="bg-red-950/40 border border-red-800/60 text-red-300 text-xs p-4 rounded-2xl flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0"></span>
+            <span>{error}</span>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Address Selection */}
           <div>
-            <label className="block text-xs font-semibold text-slate-600 uppercase mb-2">Service Address</label>
+            <label className="block text-xs font-bold text-[#c7c4d7] uppercase tracking-wider mb-2">Service Address</label>
             <div className="flex gap-2 mb-3">
               {savedAddresses.map((sa) => (
                 <button
                   type="button"
                   key={sa.label}
                   onClick={() => { setAddress(sa.address_text); setLat(sa.lat); setLng(sa.lng); }}
-                  className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition ${
+                  className={`text-xs font-semibold px-3 py-1.5 rounded-xl border transition cursor-pointer ${
                     address === sa.address_text
-                      ? 'bg-indigo-50 border-indigo-500 text-indigo-600'
-                      : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                      ? 'bg-[#8083ff]/20 border-[#8083ff] text-[#c0c1ff]'
+                      : 'bg-[#0f131e] border-white/[0.08] text-[#908fa0] hover:text-white'
                   }`}
                 >
                   📍 {sa.label}
@@ -114,13 +115,13 @@ export default function NewBooking() {
               ))}
             </div>
             <div className="relative">
-              <MapPin className="w-5 h-5 text-slate-400 absolute left-3 top-3" />
+              <MapPin className="w-4 h-4 text-[#908fa0] absolute left-3.5 top-3.5" />
               <input
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="Enter complete address"
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full pl-10 pr-4 py-3 bg-[#0f131e] border border-white/[0.08] rounded-xl text-white placeholder-[#6c6b7c] focus:outline-none focus:border-[#8083ff] focus:ring-2 focus:ring-[#8083ff]/20 text-sm"
                 required
               />
             </div>
@@ -129,27 +130,27 @@ export default function NewBooking() {
           {/* Date & Time */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-600 uppercase mb-2">Date</label>
+              <label className="block text-xs font-bold text-[#c7c4d7] uppercase tracking-wider mb-2">Date</label>
               <div className="relative">
-                <Calendar className="w-5 h-5 text-slate-400 absolute left-3 top-3" />
+                <Calendar className="w-4 h-4 text-[#908fa0] absolute left-3.5 top-3.5" />
                 <input
                   type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full pl-10 pr-4 py-3 bg-[#0f131e] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:border-[#8083ff] text-sm"
                   required
                 />
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 uppercase mb-2">Time</label>
+              <label className="block text-xs font-bold text-[#c7c4d7] uppercase tracking-wider mb-2">Time</label>
               <div className="relative">
-                <Clock className="w-5 h-5 text-slate-400 absolute left-3 top-3" />
+                <Clock className="w-4 h-4 text-[#908fa0] absolute left-3.5 top-3.5" />
                 <input
                   type="time"
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full pl-10 pr-4 py-3 bg-[#0f131e] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:border-[#8083ff] text-sm"
                   required
                 />
               </div>
@@ -158,26 +159,26 @@ export default function NewBooking() {
 
           {/* Additional Notes */}
           <div>
-            <label className="block text-xs font-semibold text-slate-600 uppercase mb-2">Notes / Specific Instructions (Optional)</label>
+            <label className="block text-xs font-bold text-[#c7c4d7] uppercase tracking-wider mb-2">Notes / Specific Instructions (Optional)</label>
             <div className="relative">
-              <FileText className="w-5 h-5 text-slate-400 absolute left-3 top-3" />
+              <FileText className="w-4 h-4 text-[#908fa0] absolute left-3.5 top-3.5" />
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="e.g. Bring extra tools, fan issue in master bedroom"
                 rows="3"
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full pl-10 pr-4 py-3 bg-[#0f131e] border border-white/[0.08] rounded-xl text-white placeholder-[#6c6b7c] focus:outline-none focus:border-[#8083ff] text-sm"
               />
             </div>
           </div>
 
           {/* Summary Box */}
-          <div className="bg-indigo-50/50 rounded-xl p-4 border border-indigo-100 flex items-center justify-between">
+          <div className="bg-[#1b1f2b] rounded-2xl p-4 border border-white/[0.08] flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <CheckCircle2 className="w-5 h-5 text-indigo-600" />
+              <CheckCircle2 className="w-5 h-5 text-[#4edea3] shrink-0" />
               <div>
-                <span className="text-xs font-semibold text-slate-700">Fair-Match Guarantee</span>
-                <p className="text-xs text-slate-500">Your job will be matched to the top nearby member based on distance, rating & fair turn.</p>
+                <span className="text-xs font-bold text-white block">Fair-Match Guarantee Active</span>
+                <p className="text-[11px] text-[#908fa0]">Job offered within 5.0km radius to top qualified member based on distance, rating & fair turn.</p>
               </div>
             </div>
           </div>
@@ -185,7 +186,7 @@ export default function NewBooking() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3.5 rounded-lg shadow-md transition disabled:opacity-50 text-base"
+            className="w-full bg-gradient-to-r from-[#7c3aed] to-[#6366f1] hover:from-[#6d28d9] hover:to-[#4f46e5] text-white font-bold py-3.5 rounded-xl shadow-lg shadow-purple-600/25 transition cursor-pointer text-sm disabled:opacity-50"
           >
             {loading ? 'Submitting Request...' : `Confirm & Request Service (₹${service.base_price})`}
           </button>

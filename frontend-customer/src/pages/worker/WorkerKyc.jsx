@@ -40,16 +40,16 @@ export default function WorkerKyc() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8 pb-24">
-      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 sm:p-8">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 pb-24">
+      <div className="bg-[#171b27]/90 rounded-3xl border border-white/[0.08] shadow-2xl p-6 sm:p-8">
+        <div className="flex items-center justify-between border-b border-white/[0.08] pb-4 mb-6">
           <div>
-            <h1 className="text-xl font-black text-slate-800">Cooperative KYC Verification</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Required for Fair-Match candidate pool eligibility</p>
+            <h1 className="text-xl font-black text-white">Cooperative KYC Verification</h1>
+            <p className="text-xs text-[#908fa0] mt-0.5">Required for Fair-Match candidate pool eligibility</p>
           </div>
           <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider flex items-center gap-1 ${
-            status === 'verified' ? 'bg-emerald-100 text-emerald-700' :
-            status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
+            status === 'verified' ? 'bg-[#4edea3]/10 text-[#4edea3] border border-[#4edea3]/30' :
+            status === 'pending' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30' : 'bg-red-500/10 text-red-400 border border-red-500/30'
           }`}>
             {status === 'verified' ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Clock className="w-3.5 h-3.5" />}
             {status}
@@ -57,19 +57,19 @@ export default function WorkerKyc() {
         </div>
 
         {submitted ? (
-          <div className="bg-emerald-50 text-emerald-700 p-8 rounded-2xl text-sm text-center border border-emerald-100 space-y-2">
-            <CheckCircle2 className="w-12 h-12 mx-auto text-emerald-600 mb-2" />
-            <h3 className="font-bold text-base">KYC Document Submitted!</h3>
-            <p className="text-xs text-emerald-600">The Pune Cooperative Society admin will review your identity within 24 hours.</p>
+          <div className="bg-[#4edea3]/10 text-[#4edea3] p-8 rounded-2xl text-sm text-center border border-[#4edea3]/20 space-y-2">
+            <CheckCircle2 className="w-12 h-12 mx-auto text-[#4edea3] mb-2" />
+            <h3 className="font-bold text-base text-white">KYC Document Submitted!</h3>
+            <p className="text-xs text-[#4edea3]/90">The Pune Cooperative Society admin will review your identity within 24 hours.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-xs font-semibold text-slate-600 uppercase mb-2">Government Document Type</label>
+              <label className="block text-xs font-bold text-[#c7c4d7] uppercase tracking-wider mb-2">Government Document Type</label>
               <select
                 value={docType}
                 onChange={(e) => setDocType(e.target.value)}
-                className="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full p-3.5 bg-[#0f131e] border border-white/[0.08] rounded-xl text-xs text-white focus:outline-none focus:border-[#4edea3]"
               >
                 <option value="aadhaar">Aadhaar Card (UIDAI)</option>
                 <option value="pan">PAN Card (Income Tax Dept)</option>
@@ -79,20 +79,20 @@ export default function WorkerKyc() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-600 uppercase mb-2">Document ID Number</label>
+              <label className="block text-xs font-bold text-[#c7c4d7] uppercase tracking-wider mb-2">Document ID Number</label>
               <input
                 type="text"
                 value={docNumber}
                 onChange={(e) => setDocNumber(e.target.value)}
                 placeholder="e.g. 5432 9876 1234"
-                className="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono font-medium"
+                className="w-full p-3.5 bg-[#0f131e] border border-white/[0.08] rounded-xl text-xs text-white focus:outline-none focus:border-[#4edea3] font-mono font-medium"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-600 uppercase mb-2">Upload Identity Photo / Scan</label>
-              <label className="block border-2 border-dashed border-slate-200 hover:border-emerald-500 rounded-2xl p-6 text-center bg-slate-50/50 hover:bg-slate-50 transition cursor-pointer relative overflow-hidden">
+              <label className="block text-xs font-bold text-[#c7c4d7] uppercase tracking-wider mb-2">Upload Identity Photo / Scan</label>
+              <label className="block border-2 border-dashed border-white/[0.1] hover:border-[#4edea3] rounded-2xl p-6 text-center bg-[#0f131e] hover:bg-[#1b1f2b] transition cursor-pointer relative overflow-hidden">
                 <input
                   type="file"
                   accept="image/*,.pdf"
@@ -101,16 +101,16 @@ export default function WorkerKyc() {
                 />
                 {previewUrl ? (
                   <div className="space-y-2">
-                    <img src={previewUrl} alt="KYC Preview" className="max-h-40 mx-auto rounded-xl border border-slate-200 object-cover" />
-                    <p className="text-xs text-emerald-600 font-bold flex items-center justify-center gap-1">
+                    <img src={previewUrl} alt="KYC Preview" className="max-h-40 mx-auto rounded-xl border border-white/[0.1] object-cover" />
+                    <p className="text-xs text-[#4edea3] font-bold flex items-center justify-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" /> File Selected — Click to change
                     </p>
                   </div>
                 ) : (
                   <>
-                    <Upload className="w-9 h-9 text-slate-400 mx-auto mb-2" />
-                    <p className="text-xs font-medium text-slate-700">Click or Drag & Drop Document Image</p>
-                    <p className="text-[11px] text-slate-400 mt-1">PNG, JPG or PDF up to 5MB</p>
+                    <Upload className="w-9 h-9 text-[#908fa0] mx-auto mb-2" />
+                    <p className="text-xs font-medium text-[#c7c4d7]">Click or Drag & Drop Document Image</p>
+                    <p className="text-[11px] text-[#908fa0] mt-1">PNG, JPG or PDF up to 5MB</p>
                   </>
                 )}
               </label>
@@ -119,7 +119,7 @@ export default function WorkerKyc() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black py-3.5 rounded-xl text-sm shadow-md transition disabled:opacity-50 cursor-pointer"
+              className="w-full bg-gradient-to-r from-[#4edea3] to-[#00a572] hover:brightness-110 text-[#003824] font-black py-3.5 rounded-xl text-xs shadow-md transition disabled:opacity-50 cursor-pointer"
             >
               {loading ? 'Submitting...' : 'Submit KYC Documents'}
             </button>

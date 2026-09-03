@@ -24,51 +24,54 @@ export default function Profile() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
-        <div className="flex items-center gap-4 border-b border-slate-100 pb-6 mb-6">
-          <div className="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold">
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
+      <div className="bg-[#171b27]/90 rounded-3xl border border-white/[0.08] shadow-2xl p-6 sm:p-8 space-y-6">
+        <div className="flex items-center gap-4 border-b border-white/[0.08] pb-6">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#8083ff] to-[#6366f1] text-white flex items-center justify-center text-2xl font-bold shadow-lg">
             {user?.name?.charAt(0) || 'U'}
           </div>
           <div>
-            <h1 className="text-xl font-bold text-slate-800">{user?.name || 'Customer Account'}</h1>
-            <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
-              <Phone className="w-3.5 h-3.5" /> +91 {user?.phone}
+            <span className="text-[10px] bg-[#8083ff]/15 text-[#c0c1ff] font-bold px-2 py-0.5 rounded uppercase border border-[#8083ff]/30">
+              {user?.role || 'member'}
+            </span>
+            <h1 className="text-xl font-extrabold text-white mt-1">{user?.name || 'Customer Account'}</h1>
+            <p className="text-xs text-[#908fa0] flex items-center gap-1 mt-0.5">
+              <Phone className="w-3.5 h-3.5 text-[#908fa0]" /> +91 {user?.phone}
             </p>
           </div>
         </div>
 
         {saved && (
-          <div className="bg-emerald-50 text-emerald-700 text-sm p-3 rounded-lg mb-6 border border-emerald-100 flex items-center gap-2">
+          <div className="bg-[#4edea3]/15 text-[#4edea3] text-xs p-3.5 rounded-xl border border-[#4edea3]/30 flex items-center gap-2">
             <Check className="w-4 h-4" /> Profile updated successfully!
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-xs font-semibold text-slate-600 uppercase mb-2">Full Name</label>
+            <label className="block text-xs font-bold text-[#c7c4d7] uppercase tracking-wider mb-2">Full Name</label>
             <div className="relative">
-              <User className="w-5 h-5 text-slate-400 absolute left-3 top-3" />
+              <User className="w-4 h-4 text-[#908fa0] absolute left-3.5 top-3.5" />
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full pl-10 pr-4 py-3 bg-[#0f131e] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:border-[#8083ff] text-xs"
                 required
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-600 uppercase mb-2">Language Preference</label>
+            <label className="block text-xs font-bold text-[#c7c4d7] uppercase tracking-wider mb-2">Language Preference</label>
             <div className="relative">
-              <Globe className="w-5 h-5 text-slate-400 absolute left-3 top-3" />
+              <Globe className="w-4 h-4 text-[#908fa0] absolute left-3.5 top-3.5" />
               <select
                 value={lang}
                 onChange={(e) => setLang(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full pl-10 pr-4 py-3 bg-[#0f131e] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:border-[#8083ff] text-xs"
               >
-                <option value="en">English</option>
+                <option value="en">English (English)</option>
                 <option value="hi">हिंदी (Hindi)</option>
                 <option value="mr">मराठी (Marathi)</option>
               </select>
@@ -76,28 +79,28 @@ export default function Profile() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-600 uppercase mb-2">Saved Addresses</label>
+            <label className="block text-xs font-bold text-[#c7c4d7] uppercase tracking-wider mb-2">Saved Addresses</label>
             <div className="space-y-2">
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs flex items-center justify-between">
+              <div className="p-3.5 bg-[#0f131e] rounded-xl border border-white/[0.08] text-xs flex items-center justify-between">
                 <div>
-                  <span className="font-bold text-slate-700">Home</span>
-                  <p className="text-slate-500">12 MG Road, Pune</p>
+                  <span className="font-bold text-white">Home</span>
+                  <p className="text-[#908fa0] mt-0.5">12 MG Road, Pune</p>
                 </div>
-                <MapPin className="w-4 h-4 text-indigo-600" />
+                <MapPin className="w-4 h-4 text-[#c0c1ff]" />
               </div>
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs flex items-center justify-between">
+              <div className="p-3.5 bg-[#0f131e] rounded-xl border border-white/[0.08] text-xs flex items-center justify-between">
                 <div>
-                  <span className="font-bold text-slate-700">Office</span>
-                  <p className="text-slate-500">45 FC Road, Pune</p>
+                  <span className="font-bold text-white">Office</span>
+                  <p className="text-[#908fa0] mt-0.5">45 FC Road, Pune</p>
                 </div>
-                <MapPin className="w-4 h-4 text-indigo-600" />
+                <MapPin className="w-4 h-4 text-[#c0c1ff]" />
               </div>
             </div>
           </div>
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-lg shadow-md transition text-sm"
+            className="w-full bg-gradient-to-r from-[#7c3aed] to-[#6366f1] hover:from-[#6d28d9] hover:to-[#4f46e5] text-white font-bold py-3.5 rounded-xl shadow-lg shadow-purple-600/25 transition text-xs cursor-pointer"
           >
             Save Changes
           </button>
@@ -106,3 +109,4 @@ export default function Profile() {
     </div>
   );
 }
+

@@ -105,26 +105,26 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center items-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-[#0a0e19] text-[#dfe2f2] flex flex-col justify-center items-center p-4 relative overflow-hidden">
       {/* Ambient background glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-gradient-to-tr from-indigo-600/15 via-emerald-600/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-gradient-to-tr from-[#8083ff]/15 via-[#4edea3]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="relative z-10 max-w-md w-full space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-500 to-emerald-500 text-white shadow-xl shadow-indigo-500/20 mb-1">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#8083ff] to-[#4edea3] text-white shadow-xl shadow-[#8083ff]/20 mb-1">
             <ShieldCheck className="w-8 h-8" />
           </div>
           <h1 className="text-3xl font-black tracking-tight text-white">
-            Sahakar<span className="text-emerald-400">Seva</span>
+            Sahakar<span className="text-[#c0c1ff]">Seva</span>
           </h1>
-          <p className="text-xs text-slate-400 font-medium">
+          <p className="text-xs text-[#908fa0] font-medium">
             Cooperative Household Gig Platform • Unified Authority Portal
           </p>
         </div>
 
         {/* Main Card */}
-        <div className="bg-slate-900/80 backdrop-blur-xl rounded-3xl p-7 border border-slate-800 shadow-2xl space-y-6">
+        <div className="bg-[#1b1f2b]/90 backdrop-blur-xl rounded-3xl p-7 border border-white/[0.08] shadow-2xl space-y-6">
           {error && (
             <div className="bg-red-950/40 border border-red-800/60 text-red-300 text-xs p-3.5 rounded-xl flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0"></span>

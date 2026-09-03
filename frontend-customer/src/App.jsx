@@ -31,33 +31,37 @@ import AdminVerifications from './pages/admin/AdminVerifications';
 import AdminDisputes from './pages/admin/AdminDisputes';
 import AdminProfitShare from './pages/admin/AdminProfitShare';
 
+import Footer from './components/Footer';
+
 // Layout Wrappers
 function CustomerLayout({ children }) {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
-      <PersonaSwitcher />
+    <div className="min-h-screen bg-[#0f131e] text-[#dfe2f2] flex flex-col selection:bg-[#8083ff] selection:text-white">
       <Navbar />
       <main className="flex-1">{children}</main>
+      <Footer />
     </div>
   );
 }
 
 function WorkerLayout({ children }) {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
-      <PersonaSwitcher />
+    <div className="min-h-screen bg-[#0f131e] text-[#dfe2f2] flex flex-col selection:bg-[#4edea3] selection:text-[#003824]">
+      <Navbar />
       <WorkerNavbar />
       <main className="flex-1">{children}</main>
+      <Footer />
     </div>
   );
 }
 
 function AdminLayout({ children }) {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
-      <PersonaSwitcher />
+    <div className="min-h-screen bg-[#0f131e] text-[#dfe2f2] flex flex-col selection:bg-[#618bff] selection:text-white">
+      <Navbar />
       <AdminNavbar />
       <main className="flex-1">{children}</main>
+      <Footer />
     </div>
   );
 }

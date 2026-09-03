@@ -39,24 +39,24 @@ export default function AdminVerifications() {
 
   if (loading) {
     return (
-      <div className="py-20 text-center text-slate-400">
-        <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2 text-blue-600" />
+      <div className="py-20 text-center text-[#908fa0]">
+        <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2 text-[#b4c5ff]" />
         Loading verification queue...
       </div>
     );
   }
 
   return (
-    <div className="p-6 sm:p-8 max-w-7xl mx-auto space-y-6 pb-24">
+    <div className="p-6 sm:p-8 max-w-[1240px] mx-auto px-4 sm:px-6 space-y-6 pb-24">
       <div>
-        <h1 className="text-2xl font-black text-slate-900">Worker KYC Verification Queue</h1>
-        <p className="text-xs text-slate-500 mt-1">Review identity documents and verify cooperative worker members</p>
+        <h1 className="text-2xl font-black text-white">Worker KYC Verification Queue</h1>
+        <p className="text-xs text-[#c7c4d7] mt-1">Review identity documents and verify cooperative worker members</p>
       </div>
 
-      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
+      <div className="bg-[#171b27]/90 rounded-2xl border border-white/[0.08] shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-600">
-            <thead className="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+          <table className="w-full text-left text-sm text-[#c7c4d7]">
+            <thead className="bg-[#1b1f2b] border-b border-white/[0.08] text-[11px] font-bold text-[#908fa0] uppercase tracking-wider">
               <tr>
                 <th className="px-6 py-4">Worker Member</th>
                 <th className="px-6 py-4">Skill Categories</th>
@@ -65,32 +65,32 @@ export default function AdminVerifications() {
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-white/[0.08]">
               {workers.map((w) => (
-                <tr key={w.user_id} className="hover:bg-slate-50/80 transition">
-                  <td className="px-6 py-4 font-medium text-slate-900">
+                <tr key={w.user_id} className="hover:bg-white/[0.02] transition">
+                  <td className="px-6 py-4 font-medium text-white">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">
+                      <div className="w-9 h-9 rounded-xl bg-[#618bff]/15 text-[#b4c5ff] flex items-center justify-center font-bold text-sm">
                         {w.user?.name?.charAt(0) || 'W'}
                       </div>
                       <div>
-                        <p className="font-bold text-slate-900">{w.user?.name}</p>
-                        <span className="text-xs text-slate-400 font-mono">+91 {w.user?.phone}</span>
+                        <p className="font-bold text-white">{w.user?.name}</p>
+                        <span className="text-xs text-[#908fa0] font-mono">+91 {w.user?.phone}</span>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-wrap gap-1">
                       {w.skill_categories?.map((cat) => (
-                        <span key={cat} className="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md text-[11px] font-semibold capitalize">
+                        <span key={cat} className="px-2 py-0.5 bg-[#0f131e] border border-white/[0.08] text-[#c7c4d7] rounded-md text-[11px] font-semibold capitalize">
                           {cat}
                         </span>
                       ))}
                     </div>
                   </td>
                   <td className="px-6 py-4 text-xs font-mono">
-                    <span className="font-bold uppercase text-slate-700">{w.kyc_doc_type || 'Aadhaar'}</span>
-                    <p className="text-slate-400">{w.kyc_doc_number || '1234 5678 9012'}</p>
+                    <span className="font-bold uppercase text-[#c7c4d7]">{w.kyc_doc_type || 'Aadhaar'}</span>
+                    <p className="text-[#908fa0]">{w.kyc_doc_number || '1234 5678 9012'}</p>
                   </td>
                   <td className="px-6 py-4">
                     <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider inline-flex items-center gap-1 ${
@@ -114,7 +114,7 @@ export default function AdminVerifications() {
                       <button
                         onClick={() => handleVerify(w.user_id, 'rejected')}
                         disabled={processingId === w.user_id}
-                        className="bg-red-50 hover:bg-red-100 disabled:opacity-50 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer"
+                        className="bg-red-500/10 hover:bg-red-500/20 disabled:opacity-50 text-red-400 border border-red-500/20 px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer"
                       >
                         Reject
                       </button>

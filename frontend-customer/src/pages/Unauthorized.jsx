@@ -32,23 +32,23 @@ export default function Unauthorized() {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl p-8 max-w-lg w-full border border-slate-200 shadow-xl text-center">
-        <div className="w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-4 border border-amber-200">
+      <div className="bg-[#171b27]/90 rounded-3xl p-8 max-w-lg w-full border border-white/[0.08] shadow-2xl text-center">
+        <div className="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center mx-auto mb-4 border border-amber-500/20">
           <ShieldAlert className="w-9 h-9" />
         </div>
 
-        <span className="text-xs font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+        <span className="text-xs font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
           Access Restricted by Authority
         </span>
 
-        <h1 className="text-2xl font-black text-slate-800 mt-4">Restricted Surface</h1>
-        <p className="text-sm text-slate-500 mt-2 leading-relaxed">
+        <h1 className="text-2xl font-black text-white mt-4">Restricted Surface</h1>
+        <p className="text-sm text-[#908fa0] mt-2 leading-relaxed">
           You are currently authenticated as a{' '}
-          <strong className="text-slate-800 font-bold">{roleLabels[currentRole] || currentRole}</strong>.
+          <strong className="text-white font-bold">{roleLabels[currentRole] || currentRole}</strong>.
           {allowedRoles.length > 0 && (
             <span>
               {' '}This workspace requires{' '}
-              <strong className="text-indigo-600 font-bold">
+              <strong className="text-[#c0c1ff] font-bold">
                 {allowedRoles.map(r => roleLabels[r] || r).join(' or ')}
               </strong>{' '}
               authority.
@@ -57,32 +57,32 @@ export default function Unauthorized() {
         </p>
 
         {/* Demo Persona Quick Switcher */}
-        <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 my-6 text-left">
-          <h3 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <KeyRound className="w-3.5 h-3.5 text-indigo-600" />
+        <div className="bg-[#0f131e] rounded-2xl p-5 border border-white/[0.08] my-6 text-left">
+          <h3 className="text-xs font-bold text-[#c7c4d7] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <KeyRound className="w-3.5 h-3.5 text-[#8083ff]" />
             Switch to an Authorized Persona:
           </h3>
           <div className="space-y-2">
             <button
               onClick={() => handleQuickSwitch('9000000001')}
-              className="w-full flex items-center justify-between p-3 rounded-xl bg-white border border-slate-200 hover:border-indigo-400 hover:shadow-sm text-xs font-semibold text-slate-700 transition"
+              className="w-full flex items-center justify-between p-3 rounded-xl bg-[#171b27] border border-white/[0.08] hover:border-[#8083ff] text-xs font-semibold text-[#dfe2f2] transition cursor-pointer"
             >
-              <span>🧑 Customer (Amit Jain)</span>
-              <span className="text-indigo-600 font-mono">9000000001 →</span>
+              <span>🧑 Consumer (Amit Jain)</span>
+              <span className="text-[#c0c1ff] font-mono">9000000001 →</span>
             </button>
             <button
               onClick={() => handleQuickSwitch('9000000013')}
-              className="w-full flex items-center justify-between p-3 rounded-xl bg-white border border-slate-200 hover:border-emerald-400 hover:shadow-sm text-xs font-semibold text-slate-700 transition"
+              className="w-full flex items-center justify-between p-3 rounded-xl bg-[#171b27] border border-white/[0.08] hover:border-[#4edea3] text-xs font-semibold text-[#dfe2f2] transition cursor-pointer"
             >
               <span>👷 Worker Member (Amit Patil)</span>
-              <span className="text-emerald-600 font-mono">9000000013 →</span>
+              <span className="text-[#4edea3] font-mono">9000000013 →</span>
             </button>
             <button
               onClick={() => handleQuickSwitch('9000000099')}
-              className="w-full flex items-center justify-between p-3 rounded-xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-sm text-xs font-semibold text-slate-700 transition"
+              className="w-full flex items-center justify-between p-3 rounded-xl bg-[#171b27] border border-white/[0.08] hover:border-[#618bff] text-xs font-semibold text-[#dfe2f2] transition cursor-pointer"
             >
               <span>🏛️ Coop Admin (Admin Desai)</span>
-              <span className="text-blue-600 font-mono">9000000099 →</span>
+              <span className="text-[#b4c5ff] font-mono">9000000099 →</span>
             </button>
           </div>
         </div>
@@ -90,14 +90,14 @@ export default function Unauthorized() {
         <div className="flex items-center justify-center gap-4">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 transition"
+            className="flex items-center gap-1.5 text-xs text-[#908fa0] hover:text-white transition cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" /> Go Back
           </button>
-          <span className="text-slate-300">|</span>
+          <span className="text-[#464554]">|</span>
           <Link
             to={user?.role === 'worker' ? '/worker' : user?.role === 'coop_admin' ? '/admin' : '/'}
-            className="text-sm font-semibold text-indigo-600 hover:text-indigo-700"
+            className="text-xs font-semibold text-[#c0c1ff] hover:text-white"
           >
             Return to My Dashboard
           </Link>
