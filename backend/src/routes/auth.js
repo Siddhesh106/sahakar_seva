@@ -52,7 +52,10 @@ router.post('/otp/verify', async (req, res, next) => {
     const prisma = req.app.locals.prisma;
 
     // Find or create user
-    let user = await prisma.user.findUnique({ where: { phone } });
+    let user = await prisma.user.findUnique({
+      where: { phone },
+      include: { worker_profile: true, customer_profile: true }
+    });
     let isNewUser = false;
 
     if (!user) {
@@ -62,7 +65,8 @@ router.post('/otp/verify', async (req, res, next) => {
           phone,
           name: '',
           role: 'customer', // default, can be changed during registration
-        }
+        },
+        include: { worker_profile: true, customer_profile: true }
       });
       isNewUser = true;
     }
