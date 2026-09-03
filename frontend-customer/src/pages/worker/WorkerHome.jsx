@@ -10,8 +10,12 @@ export default function WorkerHome() {
   const [countdown, setCountdown] = useState(90);
   const [loading, setLoading] = useState(true);
 
+  const isFetching = React.useRef(false);
+
   // Poll for pending offers & active jobs every 3s
   const pollData = async () => {
+    if (isFetching.current) return;
+    isFetching.current = true;
     try {
       // 1. Fetch pending offer
       const offerRes = await apiFetch('/match/pending');
@@ -30,6 +34,7 @@ export default function WorkerHome() {
     } catch (err) {
       console.error('Worker home poll error:', err);
     } finally {
+      isFetching.current = false;
       setLoading(false);
     }
   };
@@ -58,13 +63,28 @@ export default function WorkerHome() {
 
   const handleToggleOnline = async () => {
     const nextStatus = online ? 'offline' : 'online';
+    let lat = 18.5204;
+    let lng = 73.8567;
+
+    if (navigator.geolocation && nextStatus === 'online') {
+      try {
+        const pos = await new Promise((res, rej) => {
+          navigator.geolocation.getCurrentPosition(res, rej, { timeout: 3000 });
+        });
+        lat = pos.coords.latitude;
+        lng = pos.coords.longitude;
+      } catch (e) {
+        // Fallback to Pune center
+      }
+    }
+
     try {
       await apiFetch('/workers/me/availability', {
         method: 'PUT',
         body: JSON.stringify({
           status: nextStatus,
-          lat: 18.5204,
-          lng: 73.8567,
+          lat,
+          lng,
         }),
       });
       setOnline(!online);

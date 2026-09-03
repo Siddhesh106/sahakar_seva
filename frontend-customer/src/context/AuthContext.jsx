@@ -17,6 +17,12 @@ export function AuthProvider({ children }) {
     } else {
       setLoading(false);
     }
+
+    const handleUnauthorized = () => {
+      logout();
+    };
+    window.addEventListener('auth:unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
   }, [token]);
 
   const requestOtp = async (phone) => {

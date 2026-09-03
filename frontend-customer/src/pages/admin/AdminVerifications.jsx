@@ -5,6 +5,7 @@ import { UserCheck, CheckCircle2, XCircle, Clock, FileText, Loader2 } from 'luci
 export default function AdminVerifications() {
   const [workers, setWorkers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [processingId, setProcessingId] = useState(null);
 
   const fetchMembers = async () => {
     try {
@@ -22,14 +23,17 @@ export default function AdminVerifications() {
   }, []);
 
   const handleVerify = async (workerId, kyc_status) => {
+    setProcessingId(workerId);
     try {
       await apiFetch(`/coop/coop-pune-001/verify-worker/${workerId}`, {
         method: 'POST',
         body: JSON.stringify({ kyc_status }),
       });
-      fetchMembers();
+      await fetchMembers();
     } catch (err) {
       alert(err.message);
+    } finally {
+      setProcessingId(null);
     }
   };
 
@@ -100,15 +104,17 @@ export default function AdminVerifications() {
                     {w.kyc_status !== 'verified' && (
                       <button
                         onClick={() => handleVerify(w.user_id, 'verified')}
-                        className="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer"
+                        disabled={processingId === w.user_id}
+                        className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer"
                       >
-                        Approve
+                        {processingId === w.user_id ? 'Updating...' : 'Approve'}
                       </button>
                     )}
                     {w.kyc_status !== 'rejected' && (
                       <button
                         onClick={() => handleVerify(w.user_id, 'rejected')}
-                        className="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer"
+                        disabled={processingId === w.user_id}
+                        className="bg-red-50 hover:bg-red-100 disabled:opacity-50 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer"
                       >
                         Reject
                       </button>

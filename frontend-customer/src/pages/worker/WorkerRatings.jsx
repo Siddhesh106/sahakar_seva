@@ -37,23 +37,28 @@ export default function WorkerRatings() {
             <div key={r.id} className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm hover:shadow-md transition">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-slate-800 text-sm">{r.from_user?.name || 'Customer'}</span>
-                  <span className="text-xs text-slate-400">• {new Date(r.created_at).toLocaleDateString()}</span>
+                  <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-xs">
+                    {r.from_user?.name?.charAt(0) || 'C'}
+                  </div>
+                  <div>
+                    <span className="font-bold text-slate-800 text-sm block">{r.from_user?.name || 'Customer'}</span>
+                    <span className="text-[11px] text-slate-400 font-mono">{new Date(r.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 text-amber-500 font-bold text-sm">
-                  {[...Array(r.stars)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                <div className="flex items-center gap-1 text-amber-500 font-bold text-sm bg-amber-50/80 px-2.5 py-1 rounded-full border border-amber-200/60">
+                  {[...Array(Math.max(0, Math.min(5, Math.round(r.stars || 5))))].map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                   ))}
-                  <span className="ml-1 text-slate-800 font-black">{r.stars}.0★</span>
+                  <span className="ml-1 text-slate-800 font-black text-xs">{r.stars || 5}.0★</span>
                 </div>
               </div>
 
               {r.comment ? (
-                <p className="text-xs text-slate-700 bg-slate-50 p-3.5 rounded-xl border border-slate-100 italic">
+                <p className="text-xs text-slate-700 bg-slate-50 p-3.5 rounded-xl border border-slate-100 italic leading-relaxed">
                   "{r.comment}"
                 </p>
               ) : (
-                <p className="text-xs text-slate-400 italic">No comment provided.</p>
+                <p className="text-xs text-slate-400 italic">No additional feedback comment.</p>
               )}
             </div>
           ))}

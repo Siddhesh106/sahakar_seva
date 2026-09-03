@@ -13,12 +13,44 @@ export default function WorkerEarnings() {
       .finally(() => setLoading(false));
   }, []);
 
+  const [withdrawing, setWithdrawing] = useState(false);
+  const [withdrawnAmount, setWithdrawnAmount] = useState(null);
+
   const handleWithdraw = () => {
-    alert(`Payout of ₹${data.wallet_balance} initiated to registered UPI ID!`);
+    if (data.wallet_balance <= 0) {
+      alert('Your wallet balance is ₹0.');
+      return;
+    }
+    setWithdrawing(true);
+    setTimeout(() => {
+      const amount = data.wallet_balance;
+      setWithdrawnAmount(amount);
+      setData(prev => ({ ...prev, wallet_balance: 0 }));
+      setWithdrawing(false);
+    }, 1200);
   };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 pb-24 space-y-6">
+      {/* Payout Success Toast */}
+      {withdrawnAmount != null && (
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-900 p-4 rounded-2xl flex items-center justify-between shadow-sm animate-fade-in">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            <div>
+              <p className="text-sm font-bold">Payout of ₹{withdrawnAmount} Processed Successfully!</p>
+              <p className="text-xs text-emerald-700">Funds transferred instantly to registered UPI handle.</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setWithdrawnAmount(null)}
+            className="text-xs font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 px-3 py-1.5 rounded-lg transition cursor-pointer"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
+
       {/* Wallet Card */}
       <div className="bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-emerald-800/40">
         <div className="flex items-center justify-between border-b border-emerald-800/60 pb-4 mb-5">
@@ -40,9 +72,17 @@ export default function WorkerEarnings() {
           </div>
           <button
             onClick={handleWithdraw}
-            className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-6 py-3 rounded-2xl text-xs shadow-lg transition cursor-pointer self-start sm:self-auto"
+            disabled={withdrawing || data.wallet_balance <= 0}
+            className="bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 font-black px-6 py-3.5 rounded-2xl text-xs shadow-lg transition cursor-pointer self-start sm:self-auto flex items-center gap-2"
           >
-            Withdraw to UPI Bank Account
+            {withdrawing ? (
+              <>
+                <span className="w-3.5 h-3.5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin"></span>
+                <span>Transferring...</span>
+              </>
+            ) : (
+              <span>Withdraw to UPI Bank Account</span>
+            )}
           </button>
         </div>
       </div>

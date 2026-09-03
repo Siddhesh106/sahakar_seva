@@ -8,14 +8,27 @@ export async function apiFetch(endpoint, options = {}) {
     ...options.headers,
   };
 
-  const response = await fetch(`${API_BASE}${endpoint}`, {
-    ...options,
-    headers,
-  });
+  try {
+    const response = await fetch(`${API_BASE}${endpoint}`, {
+      ...options,
+      headers,
+    });
 
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.error || 'Something went wrong');
+    if (response.status === 401) {
+      // Clear token on 401 Unauthorized if not on public auth endpoints
+      if (!endpoint.startsWith('/auth/')) {
+        localStorage.removeItem('token');
+        window.dispatchEvent(new Event('auth:unauthorized'));
+      }
+    }
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(data.error || `HTTP ${response.status}: Something went wrong`);
+    }
+    return data;
+  } catch (err) {
+    throw err;
   }
-  return data;
 }
+

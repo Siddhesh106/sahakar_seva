@@ -6,6 +6,7 @@ export default function AdminDisputes() {
   const [disputes, setDisputes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [resolutionNotes, setResolutionNotes] = useState({});
+  const [resolvingId, setResolvingId] = useState(null);
 
   const fetchDisputes = async () => {
     try {
@@ -24,14 +25,17 @@ export default function AdminDisputes() {
 
   const handleResolve = async (disputeId) => {
     const notes = resolutionNotes[disputeId] || 'Resolved by coop admin after review.';
+    setResolvingId(disputeId);
     try {
       await apiFetch(`/disputes/${disputeId}/resolve`, {
         method: 'PUT',
         body: JSON.stringify({ resolution_notes: notes }),
       });
-      fetchDisputes();
+      await fetchDisputes();
     } catch (err) {
       alert(err.message);
+    } finally {
+      setResolvingId(null);
     }
   };
 
@@ -96,9 +100,10 @@ export default function AdminDisputes() {
                   />
                   <button
                     onClick={() => handleResolve(d.id)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-md transition cursor-pointer"
+                    disabled={resolvingId === d.id}
+                    className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-md transition cursor-pointer"
                   >
-                    Resolve Dispute
+                    {resolvingId === d.id ? 'Recording Resolution...' : 'Resolve Dispute'}
                   </button>
                 </div>
               ) : (

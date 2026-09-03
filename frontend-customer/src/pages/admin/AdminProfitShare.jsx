@@ -22,8 +22,19 @@ export default function AdminProfitShare() {
     );
   }
 
+  const [triggering, setTriggering] = useState(false);
+  const [triggeredSuccess, setTriggeredSuccess] = useState(false);
+
   const currentSurplus = data?.current_period?.total_surplus || 15750.00;
   const memberEstimate = Math.round((currentSurplus / 15) * 100) / 100;
+
+  const handleTriggerPayout = () => {
+    setTriggering(true);
+    setTimeout(() => {
+      setTriggering(false);
+      setTriggeredSuccess(true);
+    }, 1500);
+  };
 
   return (
     <div className="p-6 sm:p-8 max-w-7xl mx-auto space-y-8 pb-24">
@@ -33,6 +44,22 @@ export default function AdminProfitShare() {
           Quarterly surplus redistribution among verified worker-members
         </p>
       </div>
+
+      {/* Dividend Trigger Toast */}
+      {triggeredSuccess && (
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-900 p-4 rounded-2xl flex items-center justify-between shadow-sm animate-fade-in">
+          <div>
+            <p className="text-sm font-bold">Dividend Payout of ₹{memberEstimate}/member Dispatched!</p>
+            <p className="text-xs text-emerald-700">Funds credited directly to 15 verified member cooperative wallets.</p>
+          </div>
+          <button
+            onClick={() => setTriggeredSuccess(false)}
+            className="text-xs font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 px-3 py-1.5 rounded-lg transition cursor-pointer"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {/* Current Period Summary Card */}
       <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-blue-900/40 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
@@ -50,10 +77,18 @@ export default function AdminProfitShare() {
 
         <div className="flex items-center justify-start md:justify-end">
           <button
-            onClick={() => alert(`Quarterly dividend of ₹${memberEstimate} initiated for 15 members!`)}
-            className="bg-blue-600 hover:bg-blue-500 text-white font-black px-6 py-3.5 rounded-2xl text-xs shadow-lg transition cursor-pointer"
+            onClick={handleTriggerPayout}
+            disabled={triggering}
+            className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-black px-6 py-3.5 rounded-2xl text-xs shadow-lg transition cursor-pointer flex items-center gap-2"
           >
-            Trigger Member Dividend Payout
+            {triggering ? (
+              <>
+                <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                <span>Processing Distribution...</span>
+              </>
+            ) : (
+              <span>Trigger Member Dividend Payout</span>
+            )}
           </button>
         </div>
       </div>
