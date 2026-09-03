@@ -48,7 +48,7 @@ export default function NewBooking() {
       const res = await apiFetch('/bookings', {
         method: 'POST',
         body: JSON.stringify({
-          category_id: `cat_${categoryName}`,
+          category_id: categoryName,
           address_text: address,
           lat,
           lng,

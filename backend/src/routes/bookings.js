@@ -4,6 +4,22 @@ const { findAndOffer } = require('../services/matchEngine');
 const router = express.Router();
 
 /**
+ * GET /bookings/categories
+ * List all available service categories.
+ */
+router.get('/categories', async (req, res, next) => {
+  try {
+    const prisma = req.app.locals.prisma;
+    const categories = await prisma.serviceCategory.findMany({
+      orderBy: { name: 'asc' }
+    });
+    res.json({ categories });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
  * POST /bookings
  * Create a new booking and trigger the match engine.
  */
@@ -19,20 +35,27 @@ router.post('/', authenticate, async (req, res, next) => {
 
     const prisma = req.app.locals.prisma;
 
-    // Get category for pricing
-    const category = await prisma.serviceCategory.findUnique({
-      where: { id: category_id }
+    // Get category for pricing — accept UUID, name (e.g. 'electrical'), or slug (e.g. 'cat_electrical')
+    const cleanCategoryName = category_id.replace(/^cat_/, '');
+    const category = await prisma.serviceCategory.findFirst({
+      where: {
+        OR: [
+          { id: category_id },
+          { name: category_id },
+          { name: cleanCategoryName },
+        ]
+      }
     });
 
     if (!category) {
       return res.status(404).json({ error: 'Service category not found' });
     }
 
-    // Create the booking
+    // Create the booking with the actual category UUID
     const booking = await prisma.booking.create({
       data: {
         customer_id: req.user.id,
-        category_id,
+        category_id: category.id,
         address_text,
         lat,
         lng,
