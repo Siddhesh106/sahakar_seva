@@ -59,6 +59,50 @@ export default function Home() {
         </div>
       </div>
 
+      {/* AI Request Classification Bar */}
+      <div className="bg-white rounded-2xl p-6 border border-indigo-100 shadow-md mb-10">
+        <div className="flex items-center gap-2 text-indigo-600 font-bold text-sm mb-2">
+          <Sparkles className="w-5 h-5 text-indigo-600 animate-pulse" />
+          <span>AI Service Assistant — Describe Your Problem in Plain Words</span>
+        </div>
+        <p className="text-xs text-slate-500 mb-4">
+          Type naturally in Hindi or English (e.g., "My bedroom fan stopped working and need electrician today" or "नल से पानी टपक रहा है")
+        </p>
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const input = e.target.elements.prompt.value.trim();
+            if (!input) return;
+            try {
+              const res = await apiFetch('/ai/parse-request', {
+                method: 'POST',
+                body: JSON.stringify({ text: input })
+              });
+              if (res.parsed?.category) {
+                navigate(`/book/${res.parsed.category}?notes=${encodeURIComponent(input)}&urgency=${res.parsed.urgency}`);
+              }
+            } catch (err) {
+              console.error('AI parse error:', err);
+              navigate(`/book/electrical?notes=${encodeURIComponent(input)}`);
+            }
+          }}
+          className="flex flex-col sm:flex-row gap-3"
+        >
+          <input
+            name="prompt"
+            type="text"
+            placeholder="e.g. My ceiling fan stopped working, need urgent fix..."
+            className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <button
+            type="submit"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-xl text-sm shadow transition flex items-center justify-center gap-2 whitespace-nowrap"
+          >
+            <Sparkles className="w-4 h-4" /> AI Understand & Book
+          </button>
+        </form>
+      </div>
+
       {/* Services Grid */}
       <div className="mb-8">
         <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">

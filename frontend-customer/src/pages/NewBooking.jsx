@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { apiFetch } from '../api';
-import { MapPin, Calendar, Clock, FileText, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { MapPin, Calendar, Clock, FileText, CheckCircle2, ArrowLeft, Sparkles } from 'lucide-react';
 
 const CATEGORY_DATA = {
   cleaning: { name: 'Home Cleaning', base_price: 300, unit: 'per_job' },
@@ -16,16 +16,20 @@ const CATEGORY_DATA = {
 
 export default function NewBooking() {
   const { categoryName } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const service = CATEGORY_DATA[categoryName] || { name: categoryName, base_price: 350, unit: 'per_job' };
+
+  const initialNotes = searchParams.get('notes') || '';
+  const initialUrgency = searchParams.get('urgency') || '';
 
   const [address, setAddress] = useState('12 MG Road, Pune');
   const [lat, setLat] = useState(18.5204);
   const [lng, setLng] = useState(73.8567);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [time, setTime] = useState('10:00');
-  const [notes, setNotes] = useState('');
+  const [notes, setNotes] = useState(initialNotes);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 

@@ -14,6 +14,7 @@ const disputeRoutes = require('./routes/disputes');
 const coopRoutes = require('./routes/coop');
 const socialSecurityRoutes = require('./routes/socialSecurity');
 const whatsappRoutes = require('./routes/whatsapp');
+const aiRoutes = require('./routes/ai');
 const { startOfferExpiryChecker } = require('./services/matchEngine');
 
 const app = express();
@@ -49,6 +50,7 @@ app.use('/api/v1/disputes', disputeRoutes);
 app.use('/api/v1/coop', coopRoutes);
 app.use('/api/v1/social-security', socialSecurityRoutes);
 app.use('/api/v1/whatsapp', whatsappRoutes);
+app.use('/api/v1/ai', aiRoutes);
 
 // Global error handler
 app.use((err, req, res, next) => {

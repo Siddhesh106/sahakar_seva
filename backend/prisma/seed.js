@@ -113,8 +113,26 @@ async function main() {
     });
 
     // Vary ratings and idle times for realistic demo
-    const ratingAvg = 3.5 + Math.random() * 1.5; // 3.5–5.0
-    const hoursAgo = Math.random() * 96; // 0–96 hours ago
+    let ratingAvg = 3.5 + Math.random() * 1.5; // 3.5–5.0
+    let hoursAgo = Math.random() * 96; // 0–96 hours ago
+    let workerLat = randomNear(PUNE_LAT);
+    let workerLng = randomNear(PUNE_LNG);
+
+    // Explicit Fair-Match Demonstration Workers:
+    if (i === 1) {
+      // Worker 2 (Priya Sharma): Close by (0.1km), 4.9 rating, but just completed a job 2 hours ago (Low Fairness)
+      ratingAvg = 4.9;
+      hoursAgo = 2.0;
+      workerLat = 18.5210;
+      workerLng = 73.8570;
+    } else if (i === 2) {
+      // Worker 3 (Amit Patil): Slightly farther (1.0km), 4.8 rating, but idle 65 hours (High Fairness Priority!)
+      ratingAvg = 4.8;
+      hoursAgo = 65.0;
+      workerLat = 18.5280;
+      workerLng = 73.8610;
+    }
+
     const lastJob = new Date(Date.now() - hoursAgo * 60 * 60 * 1000);
     const jobsCompleted = Math.floor(Math.random() * 50) + 5;
 
@@ -125,8 +143,8 @@ async function main() {
         rating_avg: Math.round(ratingAvg * 100) / 100,
         total_jobs_completed: jobsCompleted,
         availability_status: i < 12 ? 'online' : 'offline', // 12 online, 3 offline
-        current_lat: randomNear(PUNE_LAT),
-        current_lng: randomNear(PUNE_LNG),
+        current_lat: workerLat,
+        current_lng: workerLng,
         kyc_status: i < 13 ? 'verified' : 'pending', // 13 verified, 2 pending
         last_job_completed_at: lastJob,
       },
@@ -151,7 +169,7 @@ async function main() {
 
   // 4. Create customers (phone: 9000000001–9000000005)
   for (let i = 0; i < CUSTOMER_NAMES.length; i++) {
-    const phoneNum = `9000000000${i + 1}`;
+    const phoneNum = `900000000${i + 1}`;
 
     const user = await prisma.user.upsert({
       where: { phone: phoneNum },
